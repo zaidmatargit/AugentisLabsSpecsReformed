@@ -93,14 +93,14 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 
 **Tasks**:
 
-- [ ] T001 [S1] [US1] [S1] [US1.1] Initialize NestJS backend with TypeScript 5.x in `backend/` directory
-- [ ] T002 [P] [S1] [US1] [S1] [US1.1] Initialize Next.js 14 frontend with TypeScript and Tailwind in `frontend/` directory
-- [ ] T003 [P] [S1] [US1] [S1] [US1.1] Configure `backend/.eslintrc.json`, `backend/.prettierrc` for linting
-- [ ] T004 [P] [S1] [US1] [S1] [US1.1] Configure `frontend/.eslintrc.json`, `frontend/.prettierrc` for linting
-- [ ] T005 [P] [S1] [US2] [S1] [US1.1] Configure `backend/jest.config.js` with 80% coverage threshold
-- [ ] T006 [P] [S1] [US2] [S1] [US1.1] Configure `frontend/jest.config.js` and Playwright setup for E2E
-- [ ] T007 [S1] [US2] [S1] [US1.1] Create `.env.example` with all required variables
-- [ ] T008 [P] [S1] [US2] [S1] [US1.1] Create `.gitignore` excluding node_modules, build, env files
+- [ ] T001 [S1] [US1] [Backend Dev] Initialize NestJS backend with TypeScript 5.x in `backend/` directory
+- [ ] T002 [P] [S1] [US1] [Frontend Dev] Initialize Next.js 14 frontend with TypeScript and Tailwind in `frontend/` directory
+- [ ] T003 [P] [S1] [US1] [Backend Dev] Configure `backend/.eslintrc.json`, `backend/.prettierrc` for linting
+- [ ] T004 [P] [S1] [US1] [Frontend Dev] Configure `frontend/.eslintrc.json`, `frontend/.prettierrc` for linting
+- [ ] T005 [P] [S1] [US2] [Testing] Configure `backend/jest.config.js` with 80% coverage threshold
+- [ ] T006 [P] [S1] [US2] [Testing] Configure `frontend/jest.config.js` and Playwright setup for E2E
+- [ ] T007 [S1] [US2] [DevOps] Create `.env.example` with all required variables
+- [ ] T008 [P] [S1] [US2] [DevOps] Create `.gitignore` excluding node_modules, build, env files
 
 #### US Setup 1.2: Docker & Local Development Environment
 
@@ -118,10 +118,10 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 
 **Tasks**:
 
-- [ ] T009 [S1] [US3] [S1] [US1.2] Create root `docker-compose.yml` with PostgreSQL 15, Redis, pgAdmin, health checks
-- [ ] T010 [P] [S1] [US3] [S1] [US1.2] Create `backend/docker-compose.override.yml` for local dev overrides
-- [ ] T011 [P] [S1] [US3] [S1] [US1.2] Create database initialization script in `backend/prisma/init.sql`
-- [ ] T012 [P] [S1] [US3] [S1] [US1.2] Create `Makefile` with: `make dev`, `make docker-up`, `make db-seed`
+- [ ] T009 [S1] [US3] [DevOps] Create root `docker-compose.yml` with PostgreSQL 15, Redis, pgAdmin, health checks
+- [ ] T010 [P] [S1] [US3] [DevOps] Create `backend/docker-compose.override.yml` for local dev overrides
+- [ ] T011 [P] [S1] [US3] [Backend Dev] Create database initialization script in `backend/prisma/init.sql`
+- [ ] T012 [P] [S1] [US3] [DevOps] Create `Makefile` with: `make dev`, `make docker-up`, `make db-seed`
 
 #### US Setup 1.3: CI/CD Pipeline Setup
 
@@ -139,10 +139,10 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 
 **Tasks**:
 
-- [ ] T013 [S1] [US4] [S1] [US1.3] Create `.github/workflows/backend-ci.yml` for backend linting + unit tests
-- [ ] T014 [P] [S1] [US4] [S1] [US1.3] Create `.github/workflows/frontend-ci.yml` for frontend linting + Lighthouse audit
-- [ ] T015 [P] [S1] [US4] [S1] [US1.3] Setup GitHub branch protection: require CI pass + 1 approval
-- [ ] T016 [P] [S1] [US4] [S1] [US1.3] Create `.github/dependabot.yml` for dependency updates
+- [ ] T013 [S1] [US4] [DevOps] Create `.github/workflows/backend-ci.yml` for backend linting + unit tests
+- [ ] T014 [P] [S1] [US4] [DevOps] Create `.github/workflows/frontend-ci.yml` for frontend linting + Lighthouse audit
+- [ ] T015 [P] [S1] [US4] [DevOps] Setup GitHub branch protection: require CI pass + 1 approval
+- [ ] T016 [P] [S1] [US4] [DevOps] Create `.github/dependabot.yml` for dependency updates
 
 #### US Setup 1.4: Documentation & Developer Onboarding
 
@@ -158,9 +158,9 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 
 **Tasks**:
 
-- [ ] T017 [S1] [US5] Create root `README.md` with project overview, tech stack, quick start
-- [ ] T018 [P] [S1] [US5] Create `CONTRIBUTING.md` with Git workflow, PR process, code review guidelines
-- [ ] T019 [P] [S1] [US5] Create `DEVELOPMENT.md` with debugging, testing, common commands
+- [ ] T017 [S1] [US5] [Support] Create root `README.md` with project overview, tech stack, quick start
+- [ ] T018 [P] [S1] [US5] [Support] Create `CONTRIBUTING.md` with Git workflow, PR process, code review guidelines
+- [ ] T019 [P] [S1] [US5] [Support] Create `DEVELOPMENT.md` with debugging, testing, common commands
 
 ### Sprint 2: Foundational Services (Weeks 3-4)
 
@@ -195,13 +195,13 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 
 **Tasks**:
 
-- [ ] T020 [S2] [US2] Create `backend/src/entities/` directory with Prisma schema structure
-- [ ] T021 [S2] [US2] Implement Prisma schema in `backend/prisma/schema.prisma` with 11 entities
-- [ ] T022 [P] [S2] [US2] Create Prisma migrations in `backend/prisma/migrations/`
-- [ ] T023 [P] [S2] [US2] Create PostgreSQL RLS policies in `backend/prisma/migrations/001_rls_policies.sql`
-- [ ] T024 [P] [S2] [US2] Create NestJS multi-tenant guard in `backend/src/guards/multi-tenant.guard.ts`
-- [ ] T025 [P] [S2] [US2] Create organization interceptor in `backend/src/interceptors/organization.interceptor.ts`
-- [ ] T026 [P] [S2] [US2] Create `backend/tests/integration/multi-tenant.integration.test.ts` verifying RLS
+- [ ] T020 [S2] [US2] [Backend Dev] Create `backend/src/entities/` directory with Prisma schema structure
+- [ ] T021 [S2] [US2] [Backend Dev] Implement Prisma schema in `backend/prisma/schema.prisma` with 11 entities
+- [ ] T022 [P] [S2] [US2] [Backend Dev] Create Prisma migrations in `backend/prisma/migrations/`
+- [ ] T023 [P] [S2] [US2] [Security] Create PostgreSQL RLS policies in `backend/prisma/migrations/001_rls_policies.sql`
+- [ ] T024 [P] [S2] [US2] [Security] Create NestJS multi-tenant guard in `backend/src/guards/multi-tenant.guard.ts`
+- [ ] T025 [P] [S2] [US2] [Backend Dev] Create organization interceptor in `backend/src/interceptors/organization.interceptor.ts`
+- [ ] T026 [P] [S2] [US2] [Testing] Create `backend/tests/integration/multi-tenant.integration.test.ts` verifying RLS
 
 #### US Foundation 2.2: Authentication & JWT
 
@@ -220,15 +220,15 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 
 **Tasks**:
 
-- [ ] T027 [S2] [US3] Create `backend/src/config/auth.config.ts` with Supabase Auth setup
-- [ ] T028 [S2] [US3] Create `backend/src/modules/auth/auth.module.ts`
-- [ ] T029 [P] [S2] [US3] Create `backend/src/modules/auth/auth.controller.ts` with signup/login endpoints
-- [ ] T030 [P] [S2] [US3] Create `backend/src/modules/auth/auth.service.ts` with Supabase integration
-- [ ] T031 [P] [S2] [US3] Create `backend/src/modules/auth/jwt.strategy.ts` for Passport JWT validation
-- [ ] T032 [P] [S2] [US3] Create `backend/tests/integration/auth.integration.test.ts` testing signup→JWT flow
-- [ ] T033 [S2] [US3] Create `frontend/app/auth/signup/page.tsx` with signup form
-- [ ] T034 [P] [S2] [US4] Create `frontend/app/auth/login/page.tsx` with login form
-- [ ] T035 [P] [S2] [US4] Create `frontend/lib/auth.ts` with Supabase Auth client
+- [ ] T027 [S2] [US3] [Security] Create `backend/src/config/auth.config.ts` with Supabase Auth setup
+- [ ] T028 [S2] [US3] [Backend Dev] Create `backend/src/modules/auth/auth.module.ts`
+- [ ] T029 [P] [S2] [US3] [Backend Dev] Create `backend/src/modules/auth/auth.controller.ts` with signup/login endpoints
+- [ ] T030 [P] [S2] [US3] [Backend Dev] Create `backend/src/modules/auth/auth.service.ts` with Supabase integration
+- [ ] T031 [P] [S2] [US3] [Security] Create `backend/src/modules/auth/jwt.strategy.ts` for Passport JWT validation
+- [ ] T032 [P] [S2] [US3] [Testing] Create `backend/tests/integration/auth.integration.test.ts` testing signup→JWT flow
+- [ ] T033 [S2] [US3] [Frontend Dev] Create `frontend/app/auth/signup/page.tsx` with signup form
+- [ ] T034 [P] [S2] [US4] [Frontend Dev] Create `frontend/app/auth/login/page.tsx` with login form
+- [ ] T035 [P] [S2] [US4] [Frontend Dev] Create `frontend/lib/auth.ts` with Supabase Auth client
 
 #### US Foundation 2.3: API Infrastructure & Error Handling
 
@@ -245,13 +245,13 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 
 **Tasks**:
 
-- [ ] T036 [S2] [US4] Create `backend/src/config/database.config.ts` with Supabase connection
-- [ ] T037 [P] [S2] [US4] Create `backend/src/filters/http-exception.filter.ts` with error formatting
-- [ ] T038 [P] [S2] [US4] Create `backend/src/pipes/validation.pipe.ts` for request validation
-- [ ] T039 [P] [S2] [US4] Create `backend/src/modules/health/health.module.ts`
-- [ ] T040 [P] [S2] [US4] Create `backend/src/modules/health/health.controller.ts` with database + LLM health checks
-- [ ] T041 [P] [S2] [US5] Create `backend/src/main.ts` NestJS bootstrap with all guards/filters
-- [ ] T042 [P] [S2] [US5] Create `backend/src/app.module.ts` root module
+- [ ] T036 [S2] [US4] [Backend Dev] Create `backend/src/config/database.config.ts` with Supabase connection
+- [ ] T037 [P] [S2] [US4] [Backend Dev] Create `backend/src/filters/http-exception.filter.ts` with error formatting
+- [ ] T038 [P] [S2] [US4] [Backend Dev] Create `backend/src/pipes/validation.pipe.ts` for request validation
+- [ ] T039 [P] [S2] [US4] [Backend Dev] Create `backend/src/modules/health/health.module.ts`
+- [ ] T040 [P] [S2] [US4] [Monitoring] Create `backend/src/modules/health/health.controller.ts` with database + LLM health checks
+- [ ] T041 [P] [S2] [US5] [Backend Dev] Create `backend/src/main.ts` NestJS bootstrap with all guards/filters
+- [ ] T042 [P] [S2] [US5] [Backend Dev] Create `backend/src/app.module.ts` root module
 
 #### US Foundation 2.4: Governance Basics & Seeding
 
@@ -268,14 +268,14 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 
 **Tasks**:
 
-- [ ] T043 [S2] [US5] Create `backend/src/config/llm.config.ts` with OpenAI + Anthropic setup
-- [ ] T044 [P] [S2] [US5] Create `backend/src/modules/governance/cost-tracking.service.ts`
-- [ ] T045 [P] [S2] [US5] Create `backend/src/modules/governance/audit-log.service.ts`
-- [ ] T046 [P] [S2] [US5] Create `backend/src/modules/governance/governance.controller.ts`
-- [ ] T047 [S2] [US5] Create `backend/prisma/seed.ts` with test data (orgs, users, ventures)
-- [ ] T048 [P] [S2] [US6] Create `backend/tests/integration/cost-tracking.integration.test.ts`
-- [ ] T049 [S2] [US6] Create `frontend/app/dashboard/layout.tsx` with sidebar + auth provider
-- [ ] T050 [P] [S2] [US6] Create `frontend/app/dashboard/page.tsx` with venture list
+- [ ] T043 [S2] [US5] [Backend Dev] Create `backend/src/config/llm.config.ts` with OpenAI + Anthropic setup
+- [ ] T044 [P] [S2] [US5] [Monitoring] Create `backend/src/modules/governance/cost-tracking.service.ts`
+- [ ] T045 [P] [S2] [US5] [Monitoring] Create `backend/src/modules/governance/audit-log.service.ts`
+- [ ] T046 [P] [S2] [US5] [Backend Dev] Create `backend/src/modules/governance/governance.controller.ts`
+- [ ] T047 [S2] [US5] [Testing] Create `backend/prisma/seed.ts` with test data (orgs, users, ventures)
+- [ ] T048 [P] [S2] [US6] [Testing] Create `backend/tests/integration/cost-tracking.integration.test.ts`
+- [ ] T049 [S2] [US6] [Frontend Dev] Create `frontend/app/dashboard/layout.tsx` with sidebar + auth provider
+- [ ] T050 [P] [S2] [US6] [Frontend Dev] Create `frontend/app/dashboard/page.tsx` with venture list
 
 ---
 
@@ -319,16 +319,16 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 
 **Tasks**:
 
-- [ ] T051 [S3] [US1] Create `backend/src/modules/ventures/ventures.module.ts`
-- [ ] T052 [P] [S3] [US1] Create `backend/src/modules/ventures/ventures.controller.ts` with POST/GET /ventures
-- [ ] T053 [P] [S3] [US1] Create `backend/src/modules/ventures/ventures.service.ts` with venture lifecycle
-- [ ] T054 [S3] [US1] Create `backend/src/modules/agents/discover/problem-validator.agent.ts`
-- [ ] T055 [P] [S3] [US1] Create `backend/src/services/llm.service.ts` with OpenAI wrapper + retry logic
-- [ ] T056 [P] [S3] [US1] Create `backend/src/services/evidence-tier.service.ts` for E0-E4 classification
-- [ ] T057 [P] [S3] [US1] Create `backend/tests/unit/problem-validator.agent.test.ts`
-- [ ] T058 [S3] [US2] Create `frontend/app/dashboard/ventures/create/page.tsx` with idea form
-- [ ] T059 [P] [S3] [US2] Create `frontend/components/ventures/IdeaSubmissionForm.tsx`
-- [ ] T060 [P] [S3] [US2] Create `frontend/hooks/useVentures.ts` for venture CRUD
+- [ ] T051 [S3] [US1] [Backend Dev] Create `backend/src/modules/ventures/ventures.module.ts`
+- [ ] T052 [P] [S3] [US1] [Backend Dev] Create `backend/src/modules/ventures/ventures.controller.ts` with POST/GET /ventures
+- [ ] T053 [P] [S3] [US1] [Backend Dev] Create `backend/src/modules/ventures/ventures.service.ts` with venture lifecycle
+- [ ] T054 [S3] [US1] [Backend Dev] Create `backend/src/modules/agents/discover/problem-validator.agent.ts`
+- [ ] T055 [P] [S3] [US1] [Backend Dev] Create `backend/src/services/llm.service.ts` with OpenAI wrapper + retry logic
+- [ ] T056 [P] [S3] [US1] [Backend Dev] Create `backend/src/services/evidence-tier.service.ts` for E0-E4 classification
+- [ ] T057 [P] [S3] [US1] [Testing] Create `backend/tests/unit/problem-validator.agent.test.ts`
+- [ ] T058 [S3] [US2] [Frontend Dev] Create `frontend/app/dashboard/ventures/create/page.tsx` with idea form
+- [ ] T059 [P] [S3] [US2] [Frontend Dev] Create `frontend/components/ventures/IdeaSubmissionForm.tsx`
+- [ ] T060 [P] [S3] [US2] [Frontend Dev] Create `frontend/hooks/useVentures.ts` for venture CRUD
 
 #### US Discover 3.2: Competitive Analysis
 
@@ -343,14 +343,14 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 
 **Tasks**:
 
-- [ ] T061 [S3] [US2] Create `backend/src/modules/agents/discover/competitive-analyzer.agent.ts`
-- [ ] T062 [P] [S3] [US2] Create `backend/src/modules/artifacts/artifacts.module.ts` for versioning
-- [ ] T063 [P] [S3] [US2] Create `backend/src/modules/artifacts/artifacts.service.ts`
-- [ ] T064 [P] [S3] [US2] Create `backend/tests/unit/competitive-analyzer.agent.test.ts`
-- [ ] T065 [S3] [US3] Create `backend/src/modules/discover/discover.controller.ts` with POST /discover
-- [ ] T066 [P] [S3] [US3] Create `backend/src/modules/discover/discover.service.ts` orchestrating agents
-- [ ] T067 [P] [S3] [US3] Create `frontend/app/dashboard/ventures/[id]/discover/page.tsx`
-- [ ] T068 [P] [S3] [US3] Create `frontend/components/artifacts/CompetitiveAnalysisViewer.tsx`
+- [ ] T061 [S3] [US2] [Backend Dev] Create `backend/src/modules/agents/discover/competitive-analyzer.agent.ts`
+- [ ] T062 [P] [S3] [US2] [Backend Dev] Create `backend/src/modules/artifacts/artifacts.module.ts` for versioning
+- [ ] T063 [P] [S3] [US2] [Backend Dev] Create `backend/src/modules/artifacts/artifacts.service.ts`
+- [ ] T064 [P] [S3] [US2] [Testing] Create `backend/tests/unit/competitive-analyzer.agent.test.ts`
+- [ ] T065 [S3] [US3] [Backend Dev] Create `backend/src/modules/discover/discover.controller.ts` with POST /discover
+- [ ] T066 [P] [S3] [US3] [Backend Dev] Create `backend/src/modules/discover/discover.service.ts` orchestrating agents
+- [ ] T067 [P] [S3] [US3] [Frontend Dev] Create `frontend/app/dashboard/ventures/[id]/discover/page.tsx`
+- [ ] T068 [P] [S3] [US3] [Frontend Dev] Create `frontend/components/artifacts/CompetitiveAnalysisViewer.tsx`
 
 #### US Discover 3.3: Market Sizing
 
@@ -364,10 +364,10 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 
 **Tasks**:
 
-- [ ] T069 [S3] [US3] Create `backend/src/modules/agents/discover/market-sizer.agent.ts`
-- [ ] T070 [P] [S3] [US3] Create `backend/tests/unit/market-sizer.agent.test.ts`
-- [ ] T071 [P] [S3] [US3] Create `frontend/components/artifacts/MarketSizingViewer.tsx`
-- [ ] T072 [P] [S3] [US4] Create `backend/tests/integration/discover-agents.integration.test.ts`
+- [ ] T069 [S3] [US3] [Backend Dev] Create `backend/src/modules/agents/discover/market-sizer.agent.ts`
+- [ ] T070 [P] [S3] [US3] [Testing] Create `backend/tests/unit/market-sizer.agent.test.ts`
+- [ ] T071 [P] [S3] [US3] [Frontend Dev] Create `frontend/components/artifacts/MarketSizingViewer.tsx`
+- [ ] T072 [P] [S3] [US4] [Testing] Create `backend/tests/integration/discover-agents.integration.test.ts`
 
 ### Sprint 4: Discover - VRC Gate & Quality Decision (Weeks 7-8)
 
@@ -385,11 +385,11 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 
 **Tasks**:
 
-- [ ] T073 [S4] [US4] Create `backend/src/modules/agents/discover/demand-validator.agent.ts`
-- [ ] T074 [P] [S4] [US4] Create `backend/tests/unit/demand-validator.agent.test.ts`
-- [ ] T075 [P] [S4] [US4] Create `frontend/components/artifacts/DemandSignalsViewer.tsx`
-- [ ] T076 [P] [S4] [US4] Create `backend/src/services/langgraph.service.ts` with LangGraph orchestration
-- [ ] T077 [S4] [US4] Create LangGraph workflow YAML in `backend/src/modules/agents/discover/discover.workflow.yaml`
+- [ ] T073 [S4] [US4] [Backend Dev] Create `backend/src/modules/agents/discover/demand-validator.agent.ts`
+- [ ] T074 [P] [S4] [US4] [Testing] Create `backend/tests/unit/demand-validator.agent.test.ts`
+- [ ] T075 [P] [S4] [US4] [Frontend Dev] Create `frontend/components/artifacts/DemandSignalsViewer.tsx`
+- [ ] T076 [P] [S4] [US4] [Backend Dev] Create `backend/src/services/langgraph.service.ts` with LangGraph orchestration
+- [ ] T077 [S4] [US4] [Backend Dev] Create LangGraph workflow YAML in `backend/src/modules/agents/discover/discover.workflow.yaml`
 
 #### US Discover 4.2: VRC Gate Calculation & Assembly
 
@@ -405,12 +405,12 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 
 **Tasks**:
 
-- [ ] T078 [S4] [US5] Create `backend/src/modules/gates/vrc.gate.ts` with 20 indicators
-- [ ] T079 [P] [S4] [US5] Create `backend/src/modules/agents/discover/vrc-assembler.agent.ts`
-- [ ] T080 [P] [S4] [US5] Create `backend/tests/unit/vrc.gate.test.ts` testing all 20 indicators
-- [ ] T081 [P] [S4] [US5] Create `backend/src/modules/gates/gates.controller.ts` with GET /vrc, POST /vrc/decision
-- [ ] T082 [P] [S4] [US5] Create `frontend/components/gates/VRCDashboard.tsx` displaying 20 indicators
-- [ ] T083 [P] [S4] [US6] Create `frontend/components/gates/VRCRemediationGuide.tsx` showing guidance
+- [ ] T078 [S4] [US5] [Product] Create `backend/src/modules/gates/vrc.gate.ts` with 20 indicators
+- [ ] T079 [P] [S4] [US5] [Backend Dev] Create `backend/src/modules/agents/discover/vrc-assembler.agent.ts`
+- [ ] T080 [P] [S4] [US5] [Testing] Create `backend/tests/unit/vrc.gate.test.ts` testing all 20 indicators
+- [ ] T081 [P] [S4] [US5] [Backend Dev] Create `backend/src/modules/gates/gates.controller.ts` with GET /vrc, POST /vrc/decision
+- [ ] T082 [P] [S4] [US5] [Frontend Dev] Create `frontend/components/gates/VRCDashboard.tsx` displaying 20 indicators
+- [ ] T083 [P] [S4] [US6] [Frontend Dev] Create `frontend/components/gates/VRCRemediationGuide.tsx` showing guidance
 
 #### US Discover 4.3: Testing & API Compliance
 
@@ -550,10 +550,10 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 
 **Tasks**:
 
-- [ ] T111 [S6] [US4] Create `backend/src/modules/agents/define/business-model-validator.agent.ts`
-- [ ] T112 [P] [S6] [US4] Create `backend/tests/unit/business-model-validator.agent.test.ts`
-- [ ] T113 [P] [S6] [US4] Create `frontend/components/define/BusinessModelViewer.tsx`
-- [ ] T114 [P] [S6] [US4] Create LangGraph workflow in `backend/src/modules/agents/define/define.workflow.yaml`
+- [ ] T111 [S6] [US4] [Backend Dev] Create `backend/src/modules/agents/define/business-model-validator.agent.ts`
+- [ ] T112 [P] [S6] [US4] [Testing] Create `backend/tests/unit/business-model-validator.agent.test.ts`
+- [ ] T113 [P] [S6] [US4] [Frontend Dev] Create `frontend/components/define/BusinessModelViewer.tsx`
+- [ ] T114 [P] [S6] [US4] [Backend Dev] Create LangGraph workflow in `backend/src/modules/agents/define/define.workflow.yaml`
 
 #### US Define 6.2: VCD Gate Calculation
 
@@ -748,15 +748,15 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 
 **Tasks**:
 
-- [ ] T153 [S8] [US1] Create `backend/src/modules/agents/develop/develop.module.ts`
-- [ ] T154 [P] [S8] [US1] Create `backend/src/modules/agents/develop/backend-generator.agent.ts`
-- [ ] T155 [P] [S8] [US1] Create `backend/src/modules/agents/develop/frontend-generator.agent.ts`
-- [ ] T156 [P] [S8] [US1] Create `backend/src/modules/agents/develop/test-generator.agent.ts`
-- [ ] T157 [P] [S8] [US1] Create `backend/src/modules/agents/develop/schema-generator.agent.ts`
-- [ ] T158 [P] [S8] [US1] Create `backend/src/services/code-generator.service.ts` with Handlebars
-- [ ] T159 [P] [S8] [US2] Create code generation templates in `backend/src/modules/agents/develop/templates/`
-- [ ] T160 [P] [S8] [US2] Create `backend/tests/unit/test-generator.agent.test.ts`
-- [ ] T161 [P] [S8] [US2] Create `backend/tests/integration/develop-flow.integration.test.ts`
+- [ ] T153 [S8] [US1] [Backend Dev] Create `backend/src/modules/agents/develop/develop.module.ts`
+- [ ] T154 [P] [S8] [US1] [Backend Dev] Create `backend/src/modules/agents/develop/backend-generator.agent.ts`
+- [ ] T155 [P] [S8] [US1] [Backend Dev] Create `backend/src/modules/agents/develop/frontend-generator.agent.ts`
+- [ ] T156 [P] [S8] [US1] [Backend Dev] Create `backend/src/modules/agents/develop/test-generator.agent.ts`
+- [ ] T157 [P] [S8] [US1] [Backend Dev] Create `backend/src/modules/agents/develop/schema-generator.agent.ts`
+- [ ] T158 [P] [S8] [US1] [Backend Dev] Create `backend/src/services/code-generator.service.ts` with Handlebars
+- [ ] T159 [P] [S8] [US2] [DevOps] Create code generation templates in `backend/src/modules/agents/develop/templates/`
+- [ ] T160 [P] [S8] [US2] [Testing] Create `backend/tests/unit/test-generator.agent.test.ts`
+- [ ] T161 [P] [S8] [US2] [Testing] Create `backend/tests/integration/develop-flow.integration.test.ts`
 
 ### US Develop 8.2: Security & Performance
 
@@ -771,10 +771,10 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 
 **Tasks**:
 
-- [ ] T162 [S8] [US2] Create `backend/src/modules/agents/develop/security-scanner.agent.ts`
-- [ ] T163 [P] [S8] [US2] Create `backend/src/modules/agents/develop/performance-profiler.agent.ts`
-- [ ] T164 [P] [S8] [US2] Create `backend/tests/unit/security-scanner.agent.test.ts`
-- [ ] T165 [P] [S8] [US3] Create `backend/tests/contract/develop.contract.test.ts`
+- [ ] T162 [S8] [US2] [Security] Create `backend/src/modules/agents/develop/security-scanner.agent.ts`
+- [ ] T163 [P] [S8] [US2] [Monitoring] Create `backend/src/modules/agents/develop/performance-profiler.agent.ts`
+- [ ] T164 [P] [S8] [US2] [Testing] Create `backend/tests/unit/security-scanner.agent.test.ts`
+- [ ] T165 [P] [S8] [US3] [Testing] Create `backend/tests/contract/develop.contract.test.ts`
 
 ### US Develop 8.3: MDP Gate & Deployment
 
@@ -788,11 +788,11 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 
 **Tasks**:
 
-- [ ] T166 [S8] [US3] Create `backend/src/modules/gates/mdp.gate.ts` with 6 components
-- [ ] T167 [P] [S8] [US3] Create `backend/src/modules/agents/develop/mdp-assembler.agent.ts`
-- [ ] T168 [P] [S8] [US3] Create `backend/tests/unit/mdp.gate.test.ts`
-- [ ] T169 [P] [S8] [US3] Create `frontend/components/develop/CodeViewer.tsx`
-- [ ] T170 [P] [S8] [US3] Create `frontend/components/gates/MDPDashboard.tsx`
+- [ ] T166 [S8] [US3] [Product] Create `backend/src/modules/gates/mdp.gate.ts` with 6 components
+- [ ] T167 [P] [S8] [US3] [Backend Dev] Create `backend/src/modules/agents/develop/mdp-assembler.agent.ts`
+- [ ] T168 [P] [S8] [US3] [Testing] Create `backend/tests/unit/mdp.gate.test.ts`
+- [ ] T169 [P] [S8] [US3] [Frontend Dev] Create `frontend/components/develop/CodeViewer.tsx`
+- [ ] T170 [P] [S8] [US3] [Frontend Dev] Create `frontend/components/gates/MDPDashboard.tsx`
 
 ### US Deploy 8.4: Production Deployment & Telemetry
 
@@ -808,15 +808,15 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 
 **Tasks**:
 
-- [ ] T171 [S8] [US4] Create `backend/src/modules/agents/deploy/deploy.module.ts`
-- [ ] T172 [P] [S8] [US4] Create `backend/src/modules/agents/deploy/deployment-agent.agent.ts`
-- [ ] T173 [P] [S8] [US4] Create `backend/src/modules/agents/deploy/telemetry-aggregator.agent.ts`
-- [ ] T174 [P] [S8] [US4] Create `backend/src/modules/agents/deploy/divergence-detector.agent.ts`
-- [ ] T175 [P] [S8] [US4] Create `backend/src/modules/telemetry/telemetry.service.ts`
-- [ ] T176 [P] [S8] [US4] Create `backend/src/services/cascade-analyzer.service.ts`
-- [ ] T177 [P] [S8] [US5] Create `frontend/components/deploy/DeploymentStatus.tsx`
-- [ ] T178 [P] [S8] [US5] Create `frontend/components/telemetry/FeatureUsageChart.tsx`
-- [ ] T179 [P] [S8] [US5] Create `backend/tests/contract/deploy.contract.test.ts`
+- [ ] T171 [S8] [US4] [Backend Dev] Create `backend/src/modules/agents/deploy/deploy.module.ts`
+- [ ] T172 [P] [S8] [US4] [Deployment] Create `backend/src/modules/agents/deploy/deployment-agent.agent.ts`
+- [ ] T173 [P] [S8] [US4] [Monitoring] Create `backend/src/modules/agents/deploy/telemetry-aggregator.agent.ts`
+- [ ] T174 [P] [S8] [US4] [Monitoring] Create `backend/src/modules/agents/deploy/divergence-detector.agent.ts`
+- [ ] T175 [P] [S8] [US4] [Monitoring] Create `backend/src/modules/telemetry/telemetry.service.ts`
+- [ ] T176 [P] [S8] [US4] [Backend Dev] Create `backend/src/services/cascade-analyzer.service.ts`
+- [ ] T177 [P] [S8] [US5] [Frontend Dev] Create `frontend/components/deploy/DeploymentStatus.tsx`
+- [ ] T178 [P] [S8] [US5] [Frontend Dev] Create `frontend/components/telemetry/FeatureUsageChart.tsx`
+- [ ] T179 [P] [S8] [US5] [Testing] Create `backend/tests/contract/deploy.contract.test.ts`
 
 ### US Governance 8.5: Cost Tracking & Gate Approvals
 
@@ -830,12 +830,12 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 
 **Tasks**:
 
-- [ ] T180 [S8] [US5] Create `backend/src/modules/governance/governance.module.ts`
-- [ ] T181 [P] [S8] [US5] Create `backend/src/modules/governance/governance.controller.ts`
-- [ ] T182 [P] [S8] [US5] Create `backend/src/modules/governance/gates-approval.service.ts`
-- [ ] T183 [P] [S8] [US6] Create `frontend/components/governance/CostDashboard.tsx`
-- [ ] T184 [P] [S8] [US6] Create `frontend/components/governance/QualityGateApproval.tsx`
-- [ ] T185 [P] [S8] [US6] Create `frontend/app/dashboard/governance/page.tsx`
+- [ ] T180 [S8] [US5] [Backend Dev] Create `backend/src/modules/governance/governance.module.ts`
+- [ ] T181 [P] [S8] [US5] [Backend Dev] Create `backend/src/modules/governance/governance.controller.ts`
+- [ ] T182 [P] [S8] [US5] [Backend Dev] Create `backend/src/modules/governance/gates-approval.service.ts`
+- [ ] T183 [P] [S8] [US6] [Frontend Dev] Create `frontend/components/governance/CostDashboard.tsx`
+- [ ] T184 [P] [S8] [US6] [Frontend Dev] Create `frontend/components/governance/QualityGateApproval.tsx`
+- [ ] T185 [P] [S8] [US6] [Frontend Dev] Create `frontend/app/dashboard/governance/page.tsx`
 
 ### US Polish 8.6: Documentation & Final Integration
 
@@ -856,13 +856,13 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 
 **Tasks**:
 
-- [ ] T186 [S8] [US6] Create `ARCHITECTURE.md` documenting 5D phases, agents, quality gates
-- [ ] T187 [P] [S8] [US6] Create `backend/docs/API.md` with all endpoints
-- [ ] T188 [P] [S8] [US6] Create `backend/docs/AGENTS.md` documenting 26 agents
-- [ ] T189 [P] [S8] [US7] Create `DEPLOYMENT.md` with Vercel + Supabase procedures
-- [ ] T190 [P] [S8] [US7] Create `frontend/tests/e2e/full-5d-flow.spec.ts` with complete journey
-- [ ] T191 [P] [S8] [US7] Run load testing script for 100 concurrent ventures
-- [ ] T192 [P] [S8] [US7] Run OWASP ZAP security audit
+- [ ] T186 [S8] [US6] [Support] Create `ARCHITECTURE.md` documenting 5D phases, agents, quality gates
+- [ ] T187 [P] [S8] [US6] [Support] Create `backend/docs/API.md` with all endpoints
+- [ ] T188 [P] [S8] [US6] [Support] Create `backend/docs/AGENTS.md` documenting 26 agents
+- [ ] T189 [P] [S8] [US7] [Deployment] Create `DEPLOYMENT.md` with Vercel + Supabase procedures
+- [ ] T190 [P] [S8] [US7] [Testing] Create `frontend/tests/e2e/full-5d-flow.spec.ts` with complete journey
+- [ ] T191 [P] [S8] [US7] [Monitoring] Run load testing script for 100 concurrent ventures
+- [ ] T192 [P] [S8] [US7] [Security] Run OWASP ZAP security audit
 
 ---
 
@@ -925,5 +925,3 @@ grep "^- \[x\]" specs/master/tasks.md
 - [ ] Team trained on deployment procedures
 - [ ] Monitoring dashboards configured (Sentry, Vercel Analytics)
 - [ ] Runbook created for on-call support
-
-
