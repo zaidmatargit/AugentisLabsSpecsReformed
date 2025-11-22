@@ -1,0 +1,193 @@
+Title,TaskID,Parallelizable,Sprint,UserStory,Description,FilePath,Status,StoryPoints,Priority,AcceptanceCriteria
+T001-S1-US1.1,T001,No,S1,US1.1,Initialize NestJS backend with TypeScript 5.x,backend/,Not Started,3,P1,"Backend project created with NestJS 10.x, TypeScript 5.x, configured in backend/ directory"
+T002-S1-US1.1,T002,Yes,S1,US1.1,Initialize Next.js 14 frontend with TypeScript and Tailwind,frontend/,Not Started,2,P1,"Frontend project created with Next.js 14, TypeScript, Tailwind, configured in frontend/ directory"
+T003-S1-US1.1,T003,Yes,S1,US1.1,Configure backend ESLint and Prettier,backend/.eslintrc.json;backend/.prettierrc,Not Started,1,P2,ESLint and Prettier configured on both and enforcing no errors on commit
+T004-S1-US1.1,T004,Yes,S1,US1.1,Configure frontend ESLint and Prettier,frontend/.eslintrc.json;frontend/.prettierrc,Not Started,1,P2,ESLint and Prettier configured on both and enforcing no errors on commit
+T005-S1-US1.1,T005,Yes,S1,US1.1,Configure backend Jest with 80% coverage,backend/jest.config.js,Not Started,2,P2,Jest configured with 80% coverage threshold enforced on CI/CD
+T006-S1-US1.1,T006,Yes,S1,US1.1,Configure frontend Jest and Playwright,frontend/jest.config.js,Not Started,2,P2,Jest configured with 80% coverage threshold enforced on CI/CD
+T007-S1-US1.1,T007,No,S1,US1.1,Create .env.example with all variables,.env.example,Not Started,1,P2,".env.example contains all required environment variables (DATABASE_URL, SUPABASE_*, OPENAI_*, AWS_*)"
+T008-S1-US1.1,T008,Yes,S1,US1.1,Create .gitignore,.gitignore,Not Started,1,P2,".gitignore properly configured to exclude node_modules, build, env files"
+T009-S1-US1.2,T009,No,S1,US1.2,Create root docker-compose.yml,docker-compose.yml,Not Started,3,P1,"docker-compose.yml defines PostgreSQL 15, Redis, pgAdmin with health checks"
+T010-S1-US1.2,T010,Yes,S1,US1.2,Create backend Docker Compose override,backend/docker-compose.override.yml,Not Started,1,P2,.override.yml allows local dev customizations without modifying main file
+T011-S1-US1.2,T011,Yes,S1,US1.2,Create database init script,backend/prisma/init.sql,Not Started,1,P2,Database initializes automatically with seed data on first run
+T012-S1-US1.2,T012,Yes,S1,US1.2,Create Makefile with dev commands,Makefile,Not Started,2,P2,"Makefile provides: make dev, make docker-up, make docker-down, make db-seed, make db-reset"
+T013-S1-US1.3,T013,No,S1,US1.3,Create backend CI workflow,.github/workflows/backend-ci.yml,Not Started,2,P1,GitHub Actions workflow runs on every PR to main branch
+T014-S1-US1.3,T014,Yes,S1,US1.3,Create frontend CI workflow,.github/workflows/frontend-ci.yml,Not Started,2,P2,"Frontend CI validates: linting passes, Lighthouse audit runs, E2E tests pass"
+T015-S1-US1.3,T015,Yes,S1,US1.3,Setup GitHub branch protection,GitHub Settings,Not Started,1,P2,Branch protection enforced: require CI pass + 1 approval before merge
+T016-S1-US1.3,T016,Yes,S1,US1.3,Create Dependabot config,.github/dependabot.yml,Not Started,1,P2,Dependabot configured for automatic dependency updates
+T017-S1-US1.4,T017,No,S1,US1.4,Create README.md,README.md,Not Started,2,P1,"README.md contains: project overview, tech stack, quick start (5 min), local dev setup"
+T018-S1-US1.4,T018,Yes,S1,US1.4,Create CONTRIBUTING.md,CONTRIBUTING.md,Not Started,1,P2,"CONTRIBUTING.md documents: Git workflow, PR process, code review guidelines, commit conventions"
+T019-S1-US1.4,T019,Yes,S1,US1.4,Create DEVELOPMENT.md,DEVELOPMENT.md,Not Started,1,P2,"DEVELOPMENT.md contains: debugging tips, running tests, common commands, troubleshooting"
+T020-S2-US2.1,T020,No,S2,US2.1,Create entities directory structure,backend/src/entities/,Not Started,1,P1,Prisma schema structure created in backend/src/entities/
+T021-S2-US2.1,T021,No,S2,US2.1,Implement Prisma schema with 11 entities,backend/prisma/schema.prisma,Not Started,3,P1,backend/prisma/schema.prisma contains all 11 entities from data-model.md
+T022-S2-US2.1,T022,Yes,S2,US2.1,Create Prisma migrations,backend/prisma/migrations/,Not Started,2,P2,Prisma migrations created and tested with zero data loss
+T023-S2-US2.1,T023,Yes,S2,US2.1,Create PostgreSQL RLS policies,backend/prisma/migrations/001_rls_policies.sql,Not Started,2,P2,PostgreSQL RLS policies created for multi-tenant isolation (9 policies from data-model.md)
+T024-S2-US2.1,T024,Yes,S2,US2.1,Create multi-tenant guard,backend/src/guards/multi-tenant.guard.ts,Not Started,2,P2,NestJS guard enforces multi-tenant context on every protected endpoint
+T025-S2-US2.1,T025,Yes,S2,US2.1,Create organization interceptor,backend/src/interceptors/organization.interceptor.ts,Not Started,2,P2,Interceptor sets org_id on all database queries
+T026-S2-US2.1,T026,Yes,S2,US2.1,Create multi-tenant integration tests,backend/tests/integration/multi-tenant.integration.test.ts,Not Started,2,P2,Integration test verifies organization A cannot read organization B's data
+T027-S2-US2.2,T027,No,S2,US2.2,Create auth config with Supabase,backend/src/config/auth.config.ts,Not Started,2,P1,Supabase Auth setup configured in auth.config.ts
+T028-S2-US2.2,T028,No,S2,US2.2,Create auth module,backend/src/modules/auth/auth.module.ts,Not Started,1,P1,Auth module created and configured
+T029-S2-US2.2,T029,Yes,S2,US2.2,Create auth controller (signup/login),backend/src/modules/auth/auth.controller.ts,Not Started,2,P2,Auth controller with signup/login endpoints created
+T030-S2-US2.2,T030,Yes,S2,US2.2,Create auth service with Supabase,backend/src/modules/auth/auth.service.ts,Not Started,3,P2,Auth service with Supabase integration working
+T031-S2-US2.2,T031,Yes,S2,US2.2,Create JWT strategy,backend/src/modules/auth/jwt.strategy.ts,Not Started,2,P2,JWT strategy for Passport JWT validation created
+T032-S2-US2.2,T032,Yes,S2,US2.2,Create auth integration tests,backend/tests/integration/auth.integration.test.ts,Not Started,2,P2,Integration test verifies signup→JWT flow working
+T033-S2-US2.2,T033,No,S2,US2.2,Create frontend signup page,frontend/app/auth/signup/page.tsx,Not Started,2,P2,Frontend signup page with form created
+T034-S2-US2.2,T034,Yes,S2,US2.2,Create frontend login page,frontend/app/auth/login/page.tsx,Not Started,2,P2,Frontend login page with form created
+T035-S2-US2.2,T035,Yes,S2,US2.2,Create Supabase Auth client,frontend/lib/auth.ts,Not Started,2,P2,Supabase Auth client library created
+T036-S2-US2.3,T036,No,S2,US2.3,Create database config,backend/src/config/database.config.ts,Not Started,2,P1,Database config with Supabase connection created
+T037-S2-US2.3,T037,Yes,S2,US2.3,Create HTTP exception filter,backend/src/filters/http-exception.filter.ts,Not Started,1,P2,HTTP exception filter with error formatting created
+T038-S2-US2.3,T038,Yes,S2,US2.3,Create validation pipe,backend/src/pipes/validation.pipe.ts,Not Started,1,P2,Request validation pipe created
+T039-S2-US2.3,T039,Yes,S2,US2.3,Create health check module,backend/src/modules/health/health.module.ts,Not Started,1,P2,Health check module created
+T040-S2-US2.3,T040,Yes,S2,US2.3,Create health controller,backend/src/modules/health/health.controller.ts,Not Started,2,P2,GET /health responds with HTTP 200 and database + LLM health status
+T041-S2-US2.3,T041,Yes,S2,US2.3,Create NestJS main bootstrap,backend/src/main.ts,Not Started,1,P2,NestJS bootstrap with all guards/filters configured
+T042-S2-US2.3,T042,Yes,S2,US2.3,Create root app module,backend/src/app.module.ts,Not Started,2,P2,Root app module created
+T043-S2-US2.4,T043,No,S2,US2.4,Create LLM config,backend/src/config/llm.config.ts,Not Started,2,P1,LLM config with OpenAI + Anthropic setup created
+T044-S2-US2.4,T044,Yes,S2,US2.4,Create cost-tracking service,backend/src/modules/governance/cost-tracking.service.ts,Not Started,2,P2,LLM costs tracked per venture in cost_tracking table
+T045-S2-US2.4,T045,Yes,S2,US2.4,Create audit-log service,backend/src/modules/governance/audit-log.service.ts,Not Started,2,P2,"Every API call logged to audit_logs table with: timestamp, user_id, org_id, endpoint, method, status_code, duration_ms"
+T046-S2-US2.4,T046,Yes,S2,US2.4,Create governance controller,backend/src/modules/governance/governance.controller.ts,Not Started,2,P2,Governance controller created
+T047-S2-US2.4,T047,No,S2,US2.4,Create database seed script,backend/prisma/seed.ts,Not Started,2,P1,"Database seeding creates: 2 test organizations, 3 test users per org, sample ventures"
+T048-S2-US2.4,T048,Yes,S2,US2.4,Create cost-tracking integration tests,backend/tests/integration/cost-tracking.integration.test.ts,Not Started,2,P2,"Cost tracking calculates: total spend, per-venture spend, monthly forecast"
+T049-S2-US2.4,T049,No,S2,US2.4,Create dashboard layout,frontend/app/dashboard/layout.tsx,Not Started,2,P2,Dashboard layout with sidebar + auth provider created
+T050-S2-US2.4,T050,Yes,S2,US2.4,Create dashboard home page,frontend/app/dashboard/page.tsx,Not Started,2,P2,Dashboard home page with venture list created
+T051-S3-US3.1,T051,No,S3,US3.1,Create ventures module,backend/src/modules/ventures/ventures.module.ts,Not Started,1,P1,Ventures module created
+T052-S3-US3.1,T052,Yes,S3,US3.1,Create ventures controller,backend/src/modules/ventures/ventures.controller.ts,Not Started,2,P2,"POST /ventures with {idea: ""...""} creates venture and returns HTTP 201 with venture ID"
+T053-S3-US3.1,T053,Yes,S3,US3.1,Create ventures service,backend/src/modules/ventures/ventures.service.ts,Not Started,3,P2,Ventures service with venture lifecycle management created
+T054-S3-US3.1,T054,No,S3,US3.1,Create Problem Validator agent,backend/src/modules/agents/discover/problem-validator.agent.ts,Not Started,3,P1,"Problem Validator agent runs automatically and extracts: problem statement, target market, value proposition"
+T055-S3-US3.1,T055,Yes,S3,US3.1,Create LLM service wrapper,backend/src/services/llm.service.ts,Not Started,3,P2,LLM service with OpenAI wrapper + retry logic created
+T056-S3-US3.1,T056,Yes,S3,US3.1,Create evidence-tier service,backend/src/services/evidence-tier.service.ts,Not Started,2,P2,Evidence-tier service for E0-E4 classification created
+T057-S3-US3.1,T057,Yes,S3,US3.1,Create Problem Validator tests,backend/tests/unit/problem-validator.agent.test.ts,Not Started,2,P2,Problem Validator agent tested
+T058-S3-US3.1,T058,No,S3,US3.1,Create venture creation page,frontend/app/dashboard/ventures/create/page.tsx,Not Started,2,P2,Venture creation page with idea form created
+T059-S3-US3.1,T059,Yes,S3,US3.1,Create idea submission form,frontend/components/ventures/IdeaSubmissionForm.tsx,Not Started,2,P2,Idea submission form component created
+T060-S3-US3.1,T060,Yes,S3,US3.1,Create ventures hook,frontend/hooks/useVentures.ts,Not Started,1,P2,Ventures hook for CRUD operations created
+T061-S3-US3.2,T061,No,S3,US3.2,Create Competitive Analyzer agent,backend/src/modules/agents/discover/competitive-analyzer.agent.ts,Not Started,3,P1,Competitive Analyzer researches and returns 5-10 top competitors
+T062-S3-US3.2,T062,Yes,S3,US3.2,Create artifacts module,backend/src/modules/artifacts/artifacts.module.ts,Not Started,1,P2,Artifacts module for versioning created
+T063-S3-US3.2,T063,Yes,S3,US3.2,Create artifacts service,backend/src/modules/artifacts/artifacts.service.ts,Not Started,2,P2,Artifacts service for storing and managing artifacts created
+T064-S3-US3.2,T064,Yes,S3,US3.2,Create Competitive Analyzer tests,backend/tests/unit/competitive-analyzer.agent.test.ts,Not Started,2,P2,Competitive Analyzer agent tested
+T065-S3-US3.2,T065,No,S3,US3.2,Create discover controller,backend/src/modules/discover/discover.controller.ts,Not Started,2,P1,Discover controller with POST /discover endpoint created
+T066-S3-US3.2,T066,Yes,S3,US3.2,Create discover service,backend/src/modules/discover/discover.service.ts,Not Started,3,P2,Discover service orchestrating agents created
+T067-S3-US3.2,T067,Yes,S3,US3.2,Create discover page,frontend/app/dashboard/ventures/[id]/discover/page.tsx,Not Started,2,P2,Discover phase page created
+T068-S3-US3.2,T068,Yes,S3,US3.2,Create competitive analysis viewer,frontend/components/artifacts/CompetitiveAnalysisViewer.tsx,Not Started,2,P2,Frontend displays competitive landscape with clear positioning
+T069-S3-US3.3,T069,No,S3,US3.3,Create Market Sizer agent,backend/src/modules/agents/discover/market-sizer.agent.ts,Not Started,3,P1,"Market Sizer calculates TAM (Top-Down and Bottom-Up estimates), SAM, SOM"
+T070-S3-US3.3,T070,Yes,S3,US3.3,Create Market Sizer tests,backend/tests/unit/market-sizer.agent.test.ts,Not Started,2,P2,Market Sizer agent tested
+T071-S3-US3.3,T071,Yes,S3,US3.3,Create market sizing viewer,frontend/components/artifacts/MarketSizingViewer.tsx,Not Started,2,P2,Frontend displays market opportunity summary with conservative/aggressive scenarios
+T072-S3-US3.3,T072,Yes,S3,US3.3,Create discover agents integration tests,backend/tests/integration/discover-agents.integration.test.ts,Not Started,2,P2,All Discover agents execute successfully in integration test
+T073-S4-US4.1,T073,No,S4,US4.1,Create Demand Validator agent,backend/src/modules/agents/discover/demand-validator.agent.ts,Not Started,3,P1,"Demand Validator searches Reddit, Twitter, Google Trends for market signals"
+T074-S4-US4.1,T074,Yes,S4,US4.1,Create Demand Validator tests,backend/tests/unit/demand-validator.agent.test.ts,Not Started,2,P2,Demand Validator agent tested
+T075-S4-US4.1,T075,Yes,S4,US4.1,Create demand signals viewer,frontend/components/artifacts/DemandSignalsViewer.tsx,Not Started,2,P2,Frontend displays demand signals with sentiment analysis
+T076-S4-US4.1,T076,Yes,S4,US4.1,Create LangGraph orchestration service,backend/src/services/langgraph.service.ts,Not Started,3,P2,LangGraph orchestration service with workflow management created
+T077-S4-US4.1,T077,No,S4,US4.1,Create discover workflow YAML,backend/src/modules/agents/discover/discover.workflow.yaml,Not Started,2,P1,LangGraph workflow YAML for Discover phase created
+T078-S4-US4.2,T078,No,S4,US4.2,Create VRC gate with 20 indicators,backend/src/modules/gates/vrc.gate.ts,Not Started,3,P1,"VRC score calculated from 20 indicators across 4 categories: Problem (3), Opportunity (5), Evidence (7), Readiness (5)"
+T079-S4-US4.2,T079,Yes,S4,US4.2,Create VRC Assembler agent,backend/src/modules/agents/discover/vrc-assembler.agent.ts,Not Started,2,P2,VRC Assembler agent created
+T080-S4-US4.2,T080,Yes,S4,US4.2,Create VRC gate tests,backend/tests/unit/vrc.gate.test.ts,Not Started,2,P2,VRC gate tested with all 20 indicators
+T081-S4-US4.2,T081,Yes,S4,US4.2,Create gates controller,backend/src/modules/gates/gates.controller.ts,Not Started,2,P2,GET /vrc/{ventureId} returns full score breakdown
+T082-S4-US4.2,T082,Yes,S4,US4.2,Create VRC Dashboard component,frontend/components/gates/VRCDashboard.tsx,Not Started,2,P2,VRC Dashboard displays all 20 indicators with evidence tiers
+T083-S4-US4.2,T083,Yes,S4,US4.2,Create VRC remediation guide,frontend/components/gates/VRCRemediationGuide.tsx,Not Started,1,P2,Remediation guidance provided for CONDITIONAL/FAIL outcomes
+T084-S4-US4.3,T084,No,S4,US4.3,Create Discover contract tests,backend/tests/contract/discover.contract.test.ts,Not Started,2,P1,Contract tests validate all Discover endpoints match api-discover.yaml specification
+T085-S4-US4.3,T085,Yes,S4,US4.3,Create Discover E2E integration tests,backend/tests/integration/discover-flow.integration.test.ts,Not Started,3,P2,E2E test: submit idea → receive VRC score in <30 seconds
+T086-S4-US4.3,T086,Yes,S4,US4.3,Create Discover E2E Playwright tests,frontend/tests/e2e/discover-flow.spec.ts,Not Started,3,P2,E2E test: submit idea → receive VRC score in <30 seconds
+T087-S4-US4.3,T087,Yes,S4,US4.3,Create discover phase hook,frontend/hooks/useDiscoverPhase.ts,Not Started,1,P2,Hook for status polling and progress tracking created
+T088-S4-US4.4,T088,No,S4,US4.4,Create discover results page,frontend/app/dashboard/ventures/[id]/discover/results/page.tsx,Not Started,2,P2,Results page showing VRC score and decision created
+T089-S4-US4.4,T089,Yes,S4,US4.4,Create discover progress tracker,frontend/components/discover/DiscoverProgressTracker.tsx,Not Started,2,P2,Progress tracker showing real-time agent execution status
+T090-S4-US4.4,T090,Yes,S4,US4.4,Create analysis viewer,frontend/components/artifacts/AnalysisViewer.tsx,Not Started,2,P2,Analysis viewer component showing all artifacts
+T091-S4-US4.4,T091,Yes,S4,US4.4,Create discover export page,frontend/app/dashboard/ventures/[id]/discover/export/page.tsx,Not Started,2,P2,Export page for packaging artifacts created
+T092-S4-US4.4,T092,Yes,S4,US4.4,Create discover export hook,frontend/hooks/useDiscoverExport.ts,Not Started,1,P2,"Export button packages all artifacts: Analysis v1, Insights v1, Competitive Positioning, Market Sizing"
+T093-S5-US5.1,T093,No,S5,US5.1,Create define module,backend/src/modules/agents/define/define.module.ts,Not Started,1,P1,Define module created
+T094-S5-US5.1,T094,Yes,S5,US5.1,Create interview ingestion agent,backend/src/modules/agents/define/interview-ingestion.agent.ts,Not Started,3,P2,Interview ingestion agent extracts insights from research documents
+T095-S5-US5.1,T095,Yes,S5,US5.1,Create define controller,backend/src/modules/define/define.controller.ts,Not Started,2,P2,Define controller with POST /define endpoint created
+T096-S5-US5.1,T096,Yes,S5,US5.1,Create define service,backend/src/modules/define/define.service.ts,Not Started,3,P2,Define service orchestrating Define phase agents created
+T097-S5-US5.1,T097,Yes,S5,US5.1,Create interview ingestion tests,backend/tests/unit/interview-ingestion.agent.test.ts,Not Started,2,P2,Interview ingestion agent tested
+T098-S5-US5.1,T098,Yes,S5,US5.1,Create research upload form,frontend/components/define/ResearchUploadForm.tsx,Not Started,2,P2,"Upload endpoint accepts PDF, transcript files"
+T099-S5-US5.1,T099,Yes,S5,US5.1,Create define page,frontend/app/dashboard/ventures/[id]/define/page.tsx,Not Started,2,P2,Define phase page created
+T100-S5-US5.2,T100,No,S5,US5.2,Create persona builder agent,backend/src/modules/agents/define/persona-builder.agent.ts,Not Started,3,P1,Generates 3-5 personas from research
+T101-S5-US5.2,T101,Yes,S5,US5.2,Create personas service,backend/src/modules/artifacts/personas.service.ts,Not Started,2,P2,Personas service managing persona artifacts created
+T102-S5-US5.2,T102,Yes,S5,US5.2,Create persona builder tests,backend/tests/unit/persona-builder.agent.test.ts,Not Started,2,P2,Persona builder agent tested
+T103-S5-US5.2,T103,Yes,S5,US5.2,Create persona card component,frontend/components/define/PersonaCard.tsx,Not Started,2,P2,"Frontend persona card shows: avatar placeholder, demographics, 3-5 key traits, top pain point"
+T104-S5-US5.2,T104,Yes,S5,US5.2,Create persona gallery component,frontend/components/define/PersonaGallery.tsx,Not Started,2,P2,Personas exported as individual cards
+T105-S5-US5.2,T105,Yes,S5,US5.2,Create define phase hook,frontend/hooks/useDefinePhase.ts,Not Started,1,P2,Define phase state management hook created
+T106-S5-US5.3,T106,No,S5,US5.3,Create requirements generator agent,backend/src/modules/agents/define/requirements-generator.agent.ts,Not Started,3,P1,Generates 50-100 user stories from personas + research
+T107-S5-US5.3,T107,Yes,S5,US5.3,Create PRD service,backend/src/modules/artifacts/prd.service.ts,Not Started,2,P2,PRD service storing PRD v2 created
+T108-S5-US5.3,T108,Yes,S5,US5.3,Create requirements generator tests,backend/tests/unit/requirements-generator.agent.test.ts,Not Started,2,P2,Requirements generator agent tested
+T109-S5-US5.3,T109,Yes,S5,US5.3,Create user story list component,frontend/components/define/UserStoryList.tsx,Not Started,2,P2,"Frontend allows filtering by: priority, persona, effort"
+T110-S5-US5.3,T110,Yes,S5,US5.3,Create user story detail component,frontend/components/define/UserStoryDetail.tsx,Not Started,2,P2,User story detail with acceptance criteria displayed
+T111-S6-US6.1,T111,No,S6,US6.1,Create business model validator agent,backend/src/modules/agents/define/business-model-validator.agent.ts,Not Started,3,P1,"Validates: pricing strategy, revenue model, profitability assumptions"
+T112-S6-US6.1,T112,Yes,S6,US6.1,Create business model validator tests,backend/tests/unit/business-model-validator.agent.test.ts,Not Started,2,P2,Business model validator agent tested
+T113-S6-US6.1,T113,Yes,S6,US6.1,Create business model viewer,frontend/components/define/BusinessModelViewer.tsx,Not Started,2,P2,Business model viewer component created
+T114-S6-US6.1,T114,Yes,S6,US6.1,Create define workflow YAML,backend/src/modules/agents/define/define.workflow.yaml,Not Started,2,P2,LangGraph workflow YAML for Define phase created
+T115-S6-US6.2,T115,No,S6,US6.2,Create VCD gate with 10 indicators,backend/src/modules/gates/vcd.gate.ts,Not Started,3,P1,"VCD score from 10 indicators: market research quality (3), persona validation (2), feature prioritization (2), business model (2), competitive positioning (1)"
+T116-S6-US6.2,T116,Yes,S6,US6.2,Create VCD Assembler agent,backend/src/modules/agents/define/vcd-assembler.agent.ts,Not Started,2,P2,VCD Assembler agent created
+T117-S6-US6.2,T117,Yes,S6,US6.2,Create VCD gate tests,backend/tests/unit/vcd.gate.test.ts,Not Started,2,P2,VCD gate tested
+T118-S6-US6.2,T118,Yes,S6,US6.2,Create VCD Dashboard component,frontend/components/gates/VCDDashboard.tsx,Not Started,2,P2,VCD Dashboard displays all 10 indicators with evidence tiers
+T119-S6-US6.2,T119,Yes,S6,US6.2,Create Define contract tests,backend/tests/contract/define.contract.test.ts,Not Started,2,P2,Contract tests validate api-define.yaml endpoints
+T120-S6-US6.3,T120,No,S6,US6.3,Create Define E2E integration tests,backend/tests/integration/define-flow.integration.test.ts,Not Started,3,P1,E2E test: upload research → personas → PRD → VCD score in <2 minutes
+T121-S6-US6.3,T121,Yes,S6,US6.3,Create Define E2E Playwright tests,frontend/tests/e2e/define-flow.spec.ts,Not Started,3,P2,E2E test: upload research → personas → PRD → VCD score in <2 minutes
+T122-S6-US6.3,T122,Yes,S6,US6.3,Create define export page,frontend/app/dashboard/ventures/[id]/define/export/page.tsx,Not Started,2,P2,"Export packages: PRD v1, Personas v1, Feature Matrix, Competitive Positioning"
+T123-S6-US6.3,T123,Yes,S6,US6.3,Create define export hook,frontend/hooks/useDefineExport.ts,Not Started,1,P2,Define export functionality hook created
+T124-S6-US6.4,T124,No,S6,US6.4,Create define progress tracker,frontend/components/define/DefineProgressTracker.tsx,Not Started,2,P2,Real-time progress tracker as agents run
+T125-S6-US6.4,T125,Yes,S6,US6.4,Create PRD viewer component,frontend/components/define/PRDViewer.tsx,Not Started,2,P2,PRD viewer component showing user stories created
+T126-S6-US6.4,T126,Yes,S6,US6.4,Create define results page,frontend/app/dashboard/ventures/[id]/define/results/page.tsx,Not Started,2,P2,"Results page showing personas, PRD, VCD score created"
+T127-S6-US6.4,T127,Yes,S6,US6.4,Create VCD remediation guide,frontend/components/gates/VCDRemediationGuide.tsx,Not Started,1,P2,Remediation guidance provided for CONDITIONAL/FAIL outcomes
+T128-S7-US7.1,T128,No,S7,US7.1,Create design module,backend/src/modules/agents/design/design.module.ts,Not Started,1,P1,Design module created
+T129-S7-US7.1,T129,Yes,S7,US7.1,Create UX agent,backend/src/modules/agents/design/ux-agent.agent.ts,Not Started,3,P2,UX agent generates wireframes
+T130-S7-US7.1,T130,Yes,S7,US7.1,Create design controller,backend/src/modules/design/design.controller.ts,Not Started,2,P2,Design controller with POST /design endpoint created
+T131-S7-US7.1,T131,Yes,S7,US7.1,Create design service,backend/src/modules/design/design.service.ts,Not Started,3,P2,Design service orchestrating Design phase agents created
+T132-S7-US7.1,T132,Yes,S7,US7.1,Create UX agent tests,backend/tests/unit/ux-agent.agent.test.ts,Not Started,2,P2,UX agent tested
+T133-S7-US7.1,T133,Yes,S7,US7.1,Create wireframe viewer,frontend/components/design/WireframeViewer.tsx,Not Started,2,P2,Frontend displays wireframes with zoom/pan controls
+T134-S7-US7.1,T134,Yes,S7,US7.1,Create design page,frontend/app/dashboard/ventures/[id]/design/page.tsx,Not Started,2,P2,Design phase page created
+T135-S7-US7.2,T135,No,S7,US7.2,Create architecture designer agent,backend/src/modules/agents/design/architecture-designer.agent.ts,Not Started,3,P1,"C4 architecture documents: Context (system boundary), Container (services), Component (modules)"
+T136-S7-US7.2,T136,Yes,S7,US7.2,Create architecture service,backend/src/modules/artifacts/architecture.service.ts,Not Started,2,P2,Architecture service managing architecture artifacts created
+T137-S7-US7.2,T137,Yes,S7,US7.2,Create architecture designer tests,backend/tests/unit/architecture-designer.agent.test.ts,Not Started,2,P2,Architecture designer agent tested
+T138-S7-US7.2,T138,Yes,S7,US7.2,Create architecture diagram component,frontend/components/design/ArchitectureDiagram.tsx,Not Started,2,P2,Architecture diagram component created
+T139-S7-US7.2,T139,Yes,S7,US7.2,Create API spec viewer,frontend/components/design/APISpecViewer.tsx,Not Started,2,P2,"OpenAPI 3.0 spec with all endpoints: methods, parameters, request/response schemas"
+T140-S7-US7.3,T140,No,S7,US7.3,Create design system builder agent,backend/src/modules/agents/design/design-system-builder.agent.ts,Not Started,3,P1,50+ reusable components with documentation and usage examples
+T141-S7-US7.3,T141,Yes,S7,US7.3,Create branding agent,backend/src/modules/agents/design/branding-agent.agent.ts,Not Started,2,P2,Branding agent creates branding guidelines
+T142-S7-US7.3,T142,Yes,S7,US7.3,Create design system service,backend/src/modules/artifacts/design-system.service.ts,Not Started,2,P2,Design system service managing design system artifacts created
+T143-S7-US7.3,T143,Yes,S7,US7.3,Create design system library,frontend/components/design/DesignSystemLibrary.tsx,Not Started,2,P2,Components exported as Figma link or React component stubs
+T144-S7-US7.3,T144,Yes,S7,US7.3,Create design system builder tests,backend/tests/unit/design-system-builder.agent.test.ts,Not Started,2,P2,Design system builder agent tested
+T145-S7-US7.4,T145,No,S7,US7.4,Create journey mapper agent,backend/src/modules/agents/design/journey-mapper.agent.ts,Not Started,3,P1,3-5 end-to-end journey maps (one per persona)
+T146-S7-US7.4,T146,Yes,S7,US7.4,Create DSP gate with 8 components,backend/src/modules/gates/dsp.gate.ts,Not Started,2,P2,"DSP score from 8 components: wireframe coverage, API spec completeness, accessibility, security design, performance considerations, scalability, compliance, brand alignment"
+T147-S7-US7.4,T147,Yes,S7,US7.4,Create DSP Assembler agent,backend/src/modules/agents/design/dsp-assembler.agent.ts,Not Started,2,P2,DSP Assembler agent created
+T148-S7-US7.4,T148,Yes,S7,US7.4,Create DSP gate tests,backend/tests/unit/dsp.gate.test.ts,Not Started,2,P2,DSP gate tested
+T149-S7-US7.4,T149,Yes,S7,US7.4,Create journey map viewer,frontend/components/design/JourneyMapViewer.tsx,Not Started,2,P2,Journey map viewer component created
+T150-S7-US7.4,T150,Yes,S7,US7.4,Create DSP Dashboard component,frontend/components/gates/DSPDashboard.tsx,Not Started,2,P2,DSP Dashboard component created
+T151-S7-US7.4,T151,Yes,S7,US7.4,Create Design contract tests,backend/tests/contract/design.contract.test.ts,Not Started,2,P2,All Design endpoints validate against api-design.yaml
+T152-S7-US7.4,T152,Yes,S7,US7.4,Create Design E2E Playwright tests,frontend/tests/e2e/design-flow.spec.ts,Not Started,3,P2,Design E2E tests created
+T153-S8-US8.1,T153,No,S8,US8.1,Create develop module,backend/src/modules/agents/develop/develop.module.ts,Not Started,1,P1,Develop module created
+T154-S8-US8.1,T154,Yes,S8,US8.1,Create backend generator agent,backend/src/modules/agents/develop/backend-generator.agent.ts,Not Started,3,P2,Backend Generator creates NestJS scaffold with all endpoints from OpenAPI spec
+T155-S8-US8.1,T155,Yes,S8,US8.1,Create frontend generator agent,backend/src/modules/agents/develop/frontend-generator.agent.ts,Not Started,3,P2,Frontend Generator creates Next.js components from wireframes
+T156-S8-US8.1,T156,Yes,S8,US8.1,Create test generator agent,backend/src/modules/agents/develop/test-generator.agent.ts,Not Started,3,P2,Test Generator creates FAILING tests first (RED phase of RED-Green-Refactor)
+T157-S8-US8.1,T157,Yes,S8,US8.1,Create schema generator agent,backend/src/modules/agents/develop/schema-generator.agent.ts,Not Started,2,P2,Schema Generator creates Prisma schema from ERD
+T158-S8-US8.1,T158,Yes,S8,US8.1,Create code generator service,backend/src/services/code-generator.service.ts,Not Started,3,P2,Code generator service with Handlebars templates created
+T159-S8-US8.1,T159,Yes,S8,US8.1,Create code generation templates,backend/src/modules/agents/develop/templates/,Not Started,3,P2,Code generation templates created
+T160-S8-US8.1,T160,Yes,S8,US8.1,Create test generator tests,backend/tests/unit/test-generator.agent.test.ts,Not Started,2,P2,Test generator agent tested
+T161-S8-US8.1,T161,Yes,S8,US8.1,Create develop E2E integration tests,backend/tests/integration/develop-flow.integration.test.ts,Not Started,3,P2,Generated code passes linting and has ≥80% test coverage
+T162-S8-US8.2,T162,No,S8,US8.2,Create security scanner agent,backend/src/modules/agents/develop/security-scanner.agent.ts,Not Started,3,P1,"Security Scanner runs SAST, dependency scanning, returns vulnerabilities with patches"
+T163-S8-US8.2,T163,Yes,S8,US8.2,Create performance profiler agent,backend/src/modules/agents/develop/performance-profiler.agent.ts,Not Started,3,P2,Performance Profiler achieves <300ms P95 latency
+T164-S8-US8.2,T164,Yes,S8,US8.2,Create security scanner tests,backend/tests/unit/security-scanner.agent.test.ts,Not Started,2,P2,Security scanner agent tested
+T165-S8-US8.2,T165,Yes,S8,US8.2,Create Develop contract tests,backend/tests/contract/develop.contract.test.ts,Not Started,2,P2,Contract tests validate all 31 endpoints match OpenAPI specs
+T166-S8-US8.3,T166,No,S8,US8.3,Create MDP gate with 6 components,backend/src/modules/gates/mdp.gate.ts,Not Started,3,P1,"MDP score from 6 components: test coverage (≥80%), security (no critical vulns), performance (<300ms), compliance (ready), documentation (complete), deployment (successful)"
+T167-S8-US8.3,T167,Yes,S8,US8.3,Create MDP Assembler agent,backend/src/modules/agents/develop/mdp-assembler.agent.ts,Not Started,2,P2,MDP Assembler agent created
+T168-S8-US8.3,T168,Yes,S8,US8.3,Create MDP gate tests,backend/tests/unit/mdp.gate.test.ts,Not Started,2,P2,MDP gate tested
+T169-S8-US8.3,T169,Yes,S8,US8.3,Create code viewer component,frontend/components/develop/CodeViewer.tsx,Not Started,2,P2,Code viewer component created
+T170-S8-US8.3,T170,Yes,S8,US8.3,Create MDP Dashboard component,frontend/components/gates/MDPDashboard.tsx,Not Started,2,P2,MDP Dashboard component created
+T171-S8-US8.4,T171,No,S8,US8.4,Create deploy module,backend/src/modules/agents/deploy/deploy.module.ts,Not Started,1,P1,Deploy module created
+T172-S8-US8.4,T172,Yes,S8,US8.4,Create deployment agent,backend/src/modules/agents/deploy/deployment-agent.agent.ts,Not Started,3,P2,Deployment Agent pushes code to Vercel + Supabase with zero downtime
+T173-S8-US8.4,T173,Yes,S8,US8.4,Create telemetry aggregator agent,backend/src/modules/agents/deploy/telemetry-aggregator.agent.ts,Not Started,3,P2,"Telemetry collection: feature usage, user cohorts, retention curves (Day 1/7/30), crash reports"
+T174-S8-US8.4,T174,Yes,S8,US8.4,Create divergence detector agent,backend/src/modules/agents/deploy/divergence-detector.agent.ts,Not Started,3,P2,Divergence Detector identifies mismatches (Define assumptions vs actual telemetry)
+T175-S8-US8.4,T175,Yes,S8,US8.4,Create telemetry service,backend/src/modules/telemetry/telemetry.service.ts,Not Started,2,P2,Telemetry service managing telemetry data created
+T176-S8-US8.4,T176,Yes,S8,US8.4,Create cascade analyzer service,backend/src/services/cascade-analyzer.service.ts,Not Started,2,P2,Cascade Impact Analyzer determines which Design/Code modules affected
+T177-S8-US8.4,T177,Yes,S8,US8.4,Create deployment status component,frontend/components/deploy/DeploymentStatus.tsx,Not Started,2,P2,Deployment status component created
+T178-S8-US8.4,T178,Yes,S8,US8.4,Create feature usage chart,frontend/components/telemetry/FeatureUsageChart.tsx,Not Started,2,P2,Feature usage chart component created
+T179-S8-US8.4,T179,Yes,S8,US8.4,Create Deploy contract tests,backend/tests/contract/deploy.contract.test.ts,Not Started,2,P2,Deploy contract tests created
+T180-S8-US8.5,T180,No,S8,US8.5,Create governance module,backend/src/modules/governance/governance.module.ts,Not Started,1,P1,Governance module created
+T181-S8-US8.5,T181,Yes,S8,US8.5,Create governance controller,backend/src/modules/governance/governance.controller.ts,Not Started,2,P2,Governance controller created
+T182-S8-US8.5,T182,Yes,S8,US8.5,Create gates approval service,backend/src/modules/governance/gates-approval.service.ts,Not Started,2,P2,Quality gates require human approval (PO/CTO) with override capability
+T183-S8-US8.5,T183,Yes,S8,US8.5,Create cost dashboard component,frontend/components/governance/CostDashboard.tsx,Not Started,2,P2,Cost dashboard shows LLM spend per venture + monthly forecasts
+T184-S8-US8.5,T184,Yes,S8,US8.5,Create quality gate approval component,frontend/components/governance/QualityGateApproval.tsx,Not Started,2,P2,Quality gate approval component created
+T185-S8-US8.5,T185,Yes,S8,US8.5,Create governance page,frontend/app/dashboard/governance/page.tsx,Not Started,2,P2,Governance page created
+T186-S8-US8.6,T186,No,S8,US8.6,Create ARCHITECTURE.md,ARCHITECTURE.md,Not Started,3,P1,"ARCHITECTURE.md documents complete system (5D phases, 26 agents, 4 quality gates)"
+T187-S8-US8.6,T187,Yes,S8,US8.6,Create API documentation,backend/docs/API.md,Not Started,2,P2,API.md lists all 31 endpoints with curl examples
+T188-S8-US8.6,T188,Yes,S8,US8.6,Create AGENTS documentation,backend/docs/AGENTS.md,Not Started,2,P2,AGENTS.md documents all 26 agents with LangGraph flows
+T189-S8-US8.6,T189,Yes,S8,US8.6,Create DEPLOYMENT.md,DEPLOYMENT.md,Not Started,2,P2,DEPLOYMENT.md documents Vercel + Supabase deployment procedures
+T190-S8-US8.6,T190,Yes,S8,US8.6,Create full 5D E2E test,frontend/tests/e2e/full-5d-flow.spec.ts,Not Started,3,P2,E2E test: complete Discover→Deploy journey in <3 hours
+T191-S8-US8.6,T191,Yes,S8,US8.6,Run load testing (100 concurrent ventures),Load Testing Scripts,Not Started,3,P2,Load testing: system handles 100 concurrent ventures being created
+T192-S8-US8.6,T192,Yes,S8,US8.6,Run OWASP ZAP security audit,Security Audit Report,Not Started,2,P2,"Security audit passed (OWASP ZAP, zero critical vulns)"

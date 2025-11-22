@@ -1,0 +1,193 @@
+TaskID,Parallelizable,Sprint,UserStory,Description,FilePath,Status,StoryPoints,Priority
+T001,No,S1,US1.1,Initialize NestJS backend with TypeScript 5.x,backend/,Not Started,3,P1
+T002,Yes,S1,US1.1,Initialize Next.js 14 frontend with TypeScript and Tailwind,frontend/,Not Started,2,P1
+T003,Yes,S1,US1.1,Configure backend ESLint and Prettier,backend/.eslintrc.json;backend/.prettierrc,Not Started,1,P2
+T004,Yes,S1,US1.1,Configure frontend ESLint and Prettier,frontend/.eslintrc.json;frontend/.prettierrc,Not Started,1,P2
+T005,Yes,S1,US1.1,Configure backend Jest with 80% coverage,backend/jest.config.js,Not Started,2,P2
+T006,Yes,S1,US1.1,Configure frontend Jest and Playwright,frontend/jest.config.js,Not Started,2,P2
+T007,No,S1,US1.1,Create .env.example with all variables,.env.example,Not Started,1,P2
+T008,Yes,S1,US1.1,Create .gitignore,.gitignore,Not Started,1,P2
+T009,No,S1,US1.2,Create root docker-compose.yml,docker-compose.yml,Not Started,3,P1
+T010,Yes,S1,US1.2,Create backend Docker Compose override,backend/docker-compose.override.yml,Not Started,1,P2
+T011,Yes,S1,US1.2,Create database init script,backend/prisma/init.sql,Not Started,1,P2
+T012,Yes,S1,US1.2,Create Makefile with dev commands,Makefile,Not Started,2,P2
+T013,No,S1,US1.3,Create backend CI workflow,.github/workflows/backend-ci.yml,Not Started,2,P1
+T014,Yes,S1,US1.3,Create frontend CI workflow,.github/workflows/frontend-ci.yml,Not Started,2,P2
+T015,Yes,S1,US1.3,Setup GitHub branch protection,GitHub Settings,Not Started,1,P2
+T016,Yes,S1,US1.3,Create Dependabot config,.github/dependabot.yml,Not Started,1,P2
+T017,No,S1,US1.4,Create README.md,README.md,Not Started,2,P1
+T018,Yes,S1,US1.4,Create CONTRIBUTING.md,CONTRIBUTING.md,Not Started,1,P2
+T019,Yes,S1,US1.4,Create DEVELOPMENT.md,DEVELOPMENT.md,Not Started,1,P2
+T020,No,S2,US2.1,Create entities directory structure,backend/src/entities/,Not Started,1,P1
+T021,No,S2,US2.1,Implement Prisma schema with 11 entities,backend/prisma/schema.prisma,Not Started,3,P1
+T022,Yes,S2,US2.1,Create Prisma migrations,backend/prisma/migrations/,Not Started,2,P2
+T023,Yes,S2,US2.1,Create PostgreSQL RLS policies,backend/prisma/migrations/001_rls_policies.sql,Not Started,2,P2
+T024,Yes,S2,US2.1,Create multi-tenant guard,backend/src/guards/multi-tenant.guard.ts,Not Started,2,P2
+T025,Yes,S2,US2.1,Create organization interceptor,backend/src/interceptors/organization.interceptor.ts,Not Started,2,P2
+T026,Yes,S2,US2.1,Create multi-tenant integration tests,backend/tests/integration/multi-tenant.integration.test.ts,Not Started,2,P2
+T027,No,S2,US2.2,Create auth config with Supabase,backend/src/config/auth.config.ts,Not Started,2,P1
+T028,No,S2,US2.2,Create auth module,backend/src/modules/auth/auth.module.ts,Not Started,1,P1
+T029,Yes,S2,US2.2,Create auth controller (signup/login),backend/src/modules/auth/auth.controller.ts,Not Started,2,P2
+T030,Yes,S2,US2.2,Create auth service with Supabase,backend/src/modules/auth/auth.service.ts,Not Started,3,P2
+T031,Yes,S2,US2.2,Create JWT strategy,backend/src/modules/auth/jwt.strategy.ts,Not Started,2,P2
+T032,Yes,S2,US2.2,Create auth integration tests,backend/tests/integration/auth.integration.test.ts,Not Started,2,P2
+T033,No,S2,US2.2,Create frontend signup page,frontend/app/auth/signup/page.tsx,Not Started,2,P2
+T034,Yes,S2,US2.2,Create frontend login page,frontend/app/auth/login/page.tsx,Not Started,2,P2
+T035,Yes,S2,US2.2,Create Supabase Auth client,frontend/lib/auth.ts,Not Started,2,P2
+T036,No,S2,US2.3,Create database config,backend/src/config/database.config.ts,Not Started,2,P1
+T037,Yes,S2,US2.3,Create HTTP exception filter,backend/src/filters/http-exception.filter.ts,Not Started,1,P2
+T038,Yes,S2,US2.3,Create validation pipe,backend/src/pipes/validation.pipe.ts,Not Started,1,P2
+T039,Yes,S2,US2.3,Create health check module,backend/src/modules/health/health.module.ts,Not Started,1,P2
+T040,Yes,S2,US2.3,Create health controller,backend/src/modules/health/health.controller.ts,Not Started,2,P2
+T041,Yes,S2,US2.3,Create NestJS main bootstrap,backend/src/main.ts,Not Started,1,P2
+T042,Yes,S2,US2.3,Create root app module,backend/src/app.module.ts,Not Started,2,P2
+T043,No,S2,US2.4,Create LLM config,backend/src/config/llm.config.ts,Not Started,2,P1
+T044,Yes,S2,US2.4,Create cost-tracking service,backend/src/modules/governance/cost-tracking.service.ts,Not Started,2,P2
+T045,Yes,S2,US2.4,Create audit-log service,backend/src/modules/governance/audit-log.service.ts,Not Started,2,P2
+T046,Yes,S2,US2.4,Create governance controller,backend/src/modules/governance/governance.controller.ts,Not Started,2,P2
+T047,No,S2,US2.4,Create database seed script,backend/prisma/seed.ts,Not Started,2,P1
+T048,Yes,S2,US2.4,Create cost-tracking integration tests,backend/tests/integration/cost-tracking.integration.test.ts,Not Started,2,P2
+T049,No,S2,US2.4,Create dashboard layout,frontend/app/dashboard/layout.tsx,Not Started,2,P2
+T050,Yes,S2,US2.4,Create dashboard home page,frontend/app/dashboard/page.tsx,Not Started,2,P2
+T051,No,S3,US3.1,Create ventures module,backend/src/modules/ventures/ventures.module.ts,Not Started,1,P1
+T052,Yes,S3,US3.1,Create ventures controller,backend/src/modules/ventures/ventures.controller.ts,Not Started,2,P2
+T053,Yes,S3,US3.1,Create ventures service,backend/src/modules/ventures/ventures.service.ts,Not Started,3,P2
+T054,No,S3,US3.1,Create Problem Validator agent,backend/src/modules/agents/discover/problem-validator.agent.ts,Not Started,3,P1
+T055,Yes,S3,US3.1,Create LLM service wrapper,backend/src/services/llm.service.ts,Not Started,3,P2
+T056,Yes,S3,US3.1,Create evidence-tier service,backend/src/services/evidence-tier.service.ts,Not Started,2,P2
+T057,Yes,S3,US3.1,Create Problem Validator tests,backend/tests/unit/problem-validator.agent.test.ts,Not Started,2,P2
+T058,No,S3,US3.1,Create venture creation page,frontend/app/dashboard/ventures/create/page.tsx,Not Started,2,P2
+T059,Yes,S3,US3.1,Create idea submission form,frontend/components/ventures/IdeaSubmissionForm.tsx,Not Started,2,P2
+T060,Yes,S3,US3.1,Create ventures hook,frontend/hooks/useVentures.ts,Not Started,1,P2
+T061,No,S3,US3.2,Create Competitive Analyzer agent,backend/src/modules/agents/discover/competitive-analyzer.agent.ts,Not Started,3,P1
+T062,Yes,S3,US3.2,Create artifacts module,backend/src/modules/artifacts/artifacts.module.ts,Not Started,1,P2
+T063,Yes,S3,US3.2,Create artifacts service,backend/src/modules/artifacts/artifacts.service.ts,Not Started,2,P2
+T064,Yes,S3,US3.2,Create Competitive Analyzer tests,backend/tests/unit/competitive-analyzer.agent.test.ts,Not Started,2,P2
+T065,No,S3,US3.2,Create discover controller,backend/src/modules/discover/discover.controller.ts,Not Started,2,P1
+T066,Yes,S3,US3.2,Create discover service,backend/src/modules/discover/discover.service.ts,Not Started,3,P2
+T067,Yes,S3,US3.2,Create discover page,frontend/app/dashboard/ventures/[id]/discover/page.tsx,Not Started,2,P2
+T068,Yes,S3,US3.2,Create competitive analysis viewer,frontend/components/artifacts/CompetitiveAnalysisViewer.tsx,Not Started,2,P2
+T069,No,S3,US3.3,Create Market Sizer agent,backend/src/modules/agents/discover/market-sizer.agent.ts,Not Started,3,P1
+T070,Yes,S3,US3.3,Create Market Sizer tests,backend/tests/unit/market-sizer.agent.test.ts,Not Started,2,P2
+T071,Yes,S3,US3.3,Create market sizing viewer,frontend/components/artifacts/MarketSizingViewer.tsx,Not Started,2,P2
+T072,Yes,S3,US3.3,Create discover agents integration tests,backend/tests/integration/discover-agents.integration.test.ts,Not Started,2,P2
+T073,No,S4,US4.1,Create Demand Validator agent,backend/src/modules/agents/discover/demand-validator.agent.ts,Not Started,3,P1
+T074,Yes,S4,US4.1,Create Demand Validator tests,backend/tests/unit/demand-validator.agent.test.ts,Not Started,2,P2
+T075,Yes,S4,US4.1,Create demand signals viewer,frontend/components/artifacts/DemandSignalsViewer.tsx,Not Started,2,P2
+T076,Yes,S4,US4.1,Create LangGraph orchestration service,backend/src/services/langgraph.service.ts,Not Started,3,P2
+T077,No,S4,US4.1,Create discover workflow YAML,backend/src/modules/agents/discover/discover.workflow.yaml,Not Started,2,P1
+T078,No,S4,US4.2,Create VRC gate with 20 indicators,backend/src/modules/gates/vrc.gate.ts,Not Started,3,P1
+T079,Yes,S4,US4.2,Create VRC Assembler agent,backend/src/modules/agents/discover/vrc-assembler.agent.ts,Not Started,2,P2
+T080,Yes,S4,US4.2,Create VRC gate tests,backend/tests/unit/vrc.gate.test.ts,Not Started,2,P2
+T081,Yes,S4,US4.2,Create gates controller,backend/src/modules/gates/gates.controller.ts,Not Started,2,P2
+T082,Yes,S4,US4.2,Create VRC Dashboard component,frontend/components/gates/VRCDashboard.tsx,Not Started,2,P2
+T083,Yes,S4,US4.2,Create VRC remediation guide,frontend/components/gates/VRCRemediationGuide.tsx,Not Started,1,P2
+T084,No,S4,US4.3,Create Discover contract tests,backend/tests/contract/discover.contract.test.ts,Not Started,2,P1
+T085,Yes,S4,US4.3,Create Discover E2E integration tests,backend/tests/integration/discover-flow.integration.test.ts,Not Started,3,P2
+T086,Yes,S4,US4.3,Create Discover E2E Playwright tests,frontend/tests/e2e/discover-flow.spec.ts,Not Started,3,P2
+T087,Yes,S4,US4.3,Create discover phase hook,frontend/hooks/useDiscoverPhase.ts,Not Started,1,P2
+T088,No,S4,US4.4,Create discover results page,frontend/app/dashboard/ventures/[id]/discover/results/page.tsx,Not Started,2,P2
+T089,Yes,S4,US4.4,Create discover progress tracker,frontend/components/discover/DiscoverProgressTracker.tsx,Not Started,2,P2
+T090,Yes,S4,US4.4,Create analysis viewer,frontend/components/artifacts/AnalysisViewer.tsx,Not Started,2,P2
+T091,Yes,S4,US4.4,Create discover export page,frontend/app/dashboard/ventures/[id]/discover/export/page.tsx,Not Started,2,P2
+T092,Yes,S4,US4.4,Create discover export hook,frontend/hooks/useDiscoverExport.ts,Not Started,1,P2
+T093,No,S5,US5.1,Create define module,backend/src/modules/agents/define/define.module.ts,Not Started,1,P1
+T094,Yes,S5,US5.1,Create interview ingestion agent,backend/src/modules/agents/define/interview-ingestion.agent.ts,Not Started,3,P2
+T095,Yes,S5,US5.1,Create define controller,backend/src/modules/define/define.controller.ts,Not Started,2,P2
+T096,Yes,S5,US5.1,Create define service,backend/src/modules/define/define.service.ts,Not Started,3,P2
+T097,Yes,S5,US5.1,Create interview ingestion tests,backend/tests/unit/interview-ingestion.agent.test.ts,Not Started,2,P2
+T098,Yes,S5,US5.1,Create research upload form,frontend/components/define/ResearchUploadForm.tsx,Not Started,2,P2
+T099,Yes,S5,US5.1,Create define page,frontend/app/dashboard/ventures/[id]/define/page.tsx,Not Started,2,P2
+T100,No,S5,US5.2,Create persona builder agent,backend/src/modules/agents/define/persona-builder.agent.ts,Not Started,3,P1
+T101,Yes,S5,US5.2,Create personas service,backend/src/modules/artifacts/personas.service.ts,Not Started,2,P2
+T102,Yes,S5,US5.2,Create persona builder tests,backend/tests/unit/persona-builder.agent.test.ts,Not Started,2,P2
+T103,Yes,S5,US5.2,Create persona card component,frontend/components/define/PersonaCard.tsx,Not Started,2,P2
+T104,Yes,S5,US5.2,Create persona gallery component,frontend/components/define/PersonaGallery.tsx,Not Started,2,P2
+T105,Yes,S5,US5.2,Create define phase hook,frontend/hooks/useDefinePhase.ts,Not Started,1,P2
+T106,No,S5,US5.3,Create requirements generator agent,backend/src/modules/agents/define/requirements-generator.agent.ts,Not Started,3,P1
+T107,Yes,S5,US5.3,Create PRD service,backend/src/modules/artifacts/prd.service.ts,Not Started,2,P2
+T108,Yes,S5,US5.3,Create requirements generator tests,backend/tests/unit/requirements-generator.agent.test.ts,Not Started,2,P2
+T109,Yes,S5,US5.3,Create user story list component,frontend/components/define/UserStoryList.tsx,Not Started,2,P2
+T110,Yes,S5,US5.3,Create user story detail component,frontend/components/define/UserStoryDetail.tsx,Not Started,2,P2
+T111,No,S6,US6.1,Create business model validator agent,backend/src/modules/agents/define/business-model-validator.agent.ts,Not Started,3,P1
+T112,Yes,S6,US6.1,Create business model validator tests,backend/tests/unit/business-model-validator.agent.test.ts,Not Started,2,P2
+T113,Yes,S6,US6.1,Create business model viewer,frontend/components/define/BusinessModelViewer.tsx,Not Started,2,P2
+T114,Yes,S6,US6.1,Create define workflow YAML,backend/src/modules/agents/define/define.workflow.yaml,Not Started,2,P2
+T115,No,S6,US6.2,Create VCD gate with 10 indicators,backend/src/modules/gates/vcd.gate.ts,Not Started,3,P1
+T116,Yes,S6,US6.2,Create VCD Assembler agent,backend/src/modules/agents/define/vcd-assembler.agent.ts,Not Started,2,P2
+T117,Yes,S6,US6.2,Create VCD gate tests,backend/tests/unit/vcd.gate.test.ts,Not Started,2,P2
+T118,Yes,S6,US6.2,Create VCD Dashboard component,frontend/components/gates/VCDDashboard.tsx,Not Started,2,P2
+T119,Yes,S6,US6.2,Create Define contract tests,backend/tests/contract/define.contract.test.ts,Not Started,2,P2
+T120,No,S6,US6.3,Create Define E2E integration tests,backend/tests/integration/define-flow.integration.test.ts,Not Started,3,P1
+T121,Yes,S6,US6.3,Create Define E2E Playwright tests,frontend/tests/e2e/define-flow.spec.ts,Not Started,3,P2
+T122,Yes,S6,US6.3,Create define export page,frontend/app/dashboard/ventures/[id]/define/export/page.tsx,Not Started,2,P2
+T123,Yes,S6,US6.3,Create define export hook,frontend/hooks/useDefineExport.ts,Not Started,1,P2
+T124,No,S6,US6.4,Create define progress tracker,frontend/components/define/DefineProgressTracker.tsx,Not Started,2,P2
+T125,Yes,S6,US6.4,Create PRD viewer component,frontend/components/define/PRDViewer.tsx,Not Started,2,P2
+T126,Yes,S6,US6.4,Create define results page,frontend/app/dashboard/ventures/[id]/define/results/page.tsx,Not Started,2,P2
+T127,Yes,S6,US6.4,Create VCD remediation guide,frontend/components/gates/VCDRemediationGuide.tsx,Not Started,1,P2
+T128,No,S7,US7.1,Create design module,backend/src/modules/agents/design/design.module.ts,Not Started,1,P1
+T129,Yes,S7,US7.1,Create UX agent,backend/src/modules/agents/design/ux-agent.agent.ts,Not Started,3,P2
+T130,Yes,S7,US7.1,Create design controller,backend/src/modules/design/design.controller.ts,Not Started,2,P2
+T131,Yes,S7,US7.1,Create design service,backend/src/modules/design/design.service.ts,Not Started,3,P2
+T132,Yes,S7,US7.1,Create UX agent tests,backend/tests/unit/ux-agent.agent.test.ts,Not Started,2,P2
+T133,Yes,S7,US7.1,Create wireframe viewer,frontend/components/design/WireframeViewer.tsx,Not Started,2,P2
+T134,Yes,S7,US7.1,Create design page,frontend/app/dashboard/ventures/[id]/design/page.tsx,Not Started,2,P2
+T135,No,S7,US7.2,Create architecture designer agent,backend/src/modules/agents/design/architecture-designer.agent.ts,Not Started,3,P1
+T136,Yes,S7,US7.2,Create architecture service,backend/src/modules/artifacts/architecture.service.ts,Not Started,2,P2
+T137,Yes,S7,US7.2,Create architecture designer tests,backend/tests/unit/architecture-designer.agent.test.ts,Not Started,2,P2
+T138,Yes,S7,US7.2,Create architecture diagram component,frontend/components/design/ArchitectureDiagram.tsx,Not Started,2,P2
+T139,Yes,S7,US7.2,Create API spec viewer,frontend/components/design/APISpecViewer.tsx,Not Started,2,P2
+T140,No,S7,US7.3,Create design system builder agent,backend/src/modules/agents/design/design-system-builder.agent.ts,Not Started,3,P1
+T141,Yes,S7,US7.3,Create branding agent,backend/src/modules/agents/design/branding-agent.agent.ts,Not Started,2,P2
+T142,Yes,S7,US7.3,Create design system service,backend/src/modules/artifacts/design-system.service.ts,Not Started,2,P2
+T143,Yes,S7,US7.3,Create design system library,frontend/components/design/DesignSystemLibrary.tsx,Not Started,2,P2
+T144,Yes,S7,US7.3,Create design system builder tests,backend/tests/unit/design-system-builder.agent.test.ts,Not Started,2,P2
+T145,No,S7,US7.4,Create journey mapper agent,backend/src/modules/agents/design/journey-mapper.agent.ts,Not Started,3,P1
+T146,Yes,S7,US7.4,Create DSP gate with 8 components,backend/src/modules/gates/dsp.gate.ts,Not Started,2,P2
+T147,Yes,S7,US7.4,Create DSP Assembler agent,backend/src/modules/agents/design/dsp-assembler.agent.ts,Not Started,2,P2
+T148,Yes,S7,US7.4,Create DSP gate tests,backend/tests/unit/dsp.gate.test.ts,Not Started,2,P2
+T149,Yes,S7,US7.4,Create journey map viewer,frontend/components/design/JourneyMapViewer.tsx,Not Started,2,P2
+T150,Yes,S7,US7.4,Create DSP Dashboard component,frontend/components/gates/DSPDashboard.tsx,Not Started,2,P2
+T151,Yes,S7,US7.4,Create Design contract tests,backend/tests/contract/design.contract.test.ts,Not Started,2,P2
+T152,Yes,S7,US7.4,Create Design E2E Playwright tests,frontend/tests/e2e/design-flow.spec.ts,Not Started,3,P2
+T153,No,S8,US8.1,Create develop module,backend/src/modules/agents/develop/develop.module.ts,Not Started,1,P1
+T154,Yes,S8,US8.1,Create backend generator agent,backend/src/modules/agents/develop/backend-generator.agent.ts,Not Started,3,P2
+T155,Yes,S8,US8.1,Create frontend generator agent,backend/src/modules/agents/develop/frontend-generator.agent.ts,Not Started,3,P2
+T156,Yes,S8,US8.1,Create test generator agent,backend/src/modules/agents/develop/test-generator.agent.ts,Not Started,3,P2
+T157,Yes,S8,US8.1,Create schema generator agent,backend/src/modules/agents/develop/schema-generator.agent.ts,Not Started,2,P2
+T158,Yes,S8,US8.1,Create code generator service,backend/src/services/code-generator.service.ts,Not Started,3,P2
+T159,Yes,S8,US8.1,Create code generation templates,backend/src/modules/agents/develop/templates/,Not Started,3,P2
+T160,Yes,S8,US8.1,Create test generator tests,backend/tests/unit/test-generator.agent.test.ts,Not Started,2,P2
+T161,Yes,S8,US8.1,Create develop E2E integration tests,backend/tests/integration/develop-flow.integration.test.ts,Not Started,3,P2
+T162,No,S8,US8.2,Create security scanner agent,backend/src/modules/agents/develop/security-scanner.agent.ts,Not Started,3,P1
+T163,Yes,S8,US8.2,Create performance profiler agent,backend/src/modules/agents/develop/performance-profiler.agent.ts,Not Started,3,P2
+T164,Yes,S8,US8.2,Create security scanner tests,backend/tests/unit/security-scanner.agent.test.ts,Not Started,2,P2
+T165,Yes,S8,US8.2,Create Develop contract tests,backend/tests/contract/develop.contract.test.ts,Not Started,2,P2
+T166,No,S8,US8.3,Create MDP gate with 6 components,backend/src/modules/gates/mdp.gate.ts,Not Started,3,P1
+T167,Yes,S8,US8.3,Create MDP Assembler agent,backend/src/modules/agents/develop/mdp-assembler.agent.ts,Not Started,2,P2
+T168,Yes,S8,US8.3,Create MDP gate tests,backend/tests/unit/mdp.gate.test.ts,Not Started,2,P2
+T169,Yes,S8,US8.3,Create code viewer component,frontend/components/develop/CodeViewer.tsx,Not Started,2,P2
+T170,Yes,S8,US8.3,Create MDP Dashboard component,frontend/components/gates/MDPDashboard.tsx,Not Started,2,P2
+T171,No,S8,US8.4,Create deploy module,backend/src/modules/agents/deploy/deploy.module.ts,Not Started,1,P1
+T172,Yes,S8,US8.4,Create deployment agent,backend/src/modules/agents/deploy/deployment-agent.agent.ts,Not Started,3,P2
+T173,Yes,S8,US8.4,Create telemetry aggregator agent,backend/src/modules/agents/deploy/telemetry-aggregator.agent.ts,Not Started,3,P2
+T174,Yes,S8,US8.4,Create divergence detector agent,backend/src/modules/agents/deploy/divergence-detector.agent.ts,Not Started,3,P2
+T175,Yes,S8,US8.4,Create telemetry service,backend/src/modules/telemetry/telemetry.service.ts,Not Started,2,P2
+T176,Yes,S8,US8.4,Create cascade analyzer service,backend/src/services/cascade-analyzer.service.ts,Not Started,2,P2
+T177,Yes,S8,US8.4,Create deployment status component,frontend/components/deploy/DeploymentStatus.tsx,Not Started,2,P2
+T178,Yes,S8,US8.4,Create feature usage chart,frontend/components/telemetry/FeatureUsageChart.tsx,Not Started,2,P2
+T179,Yes,S8,US8.4,Create Deploy contract tests,backend/tests/contract/deploy.contract.test.ts,Not Started,2,P2
+T180,No,S8,US8.5,Create governance module,backend/src/modules/governance/governance.module.ts,Not Started,1,P1
+T181,Yes,S8,US8.5,Create governance controller,backend/src/modules/governance/governance.controller.ts,Not Started,2,P2
+T182,Yes,S8,US8.5,Create gates approval service,backend/src/modules/governance/gates-approval.service.ts,Not Started,2,P2
+T183,Yes,S8,US8.5,Create cost dashboard component,frontend/components/governance/CostDashboard.tsx,Not Started,2,P2
+T184,Yes,S8,US8.5,Create quality gate approval component,frontend/components/governance/QualityGateApproval.tsx,Not Started,2,P2
+T185,Yes,S8,US8.5,Create governance page,frontend/app/dashboard/governance/page.tsx,Not Started,2,P2
+T186,No,S8,US8.6,Create ARCHITECTURE.md,ARCHITECTURE.md,Not Started,3,P1
+T187,Yes,S8,US8.6,Create API documentation,backend/docs/API.md,Not Started,2,P2
+T188,Yes,S8,US8.6,Create AGENTS documentation,backend/docs/AGENTS.md,Not Started,2,P2
+T189,Yes,S8,US8.6,Create DEPLOYMENT.md,DEPLOYMENT.md,Not Started,2,P2
+T190,Yes,S8,US8.6,Create full 5D E2E test,frontend/tests/e2e/full-5d-flow.spec.ts,Not Started,3,P2
+T191,Yes,S8,US8.6,Run load testing (100 concurrent ventures),Load Testing Scripts,Not Started,3,P2
+T192,Yes,S8,US8.6,Run OWASP ZAP security audit,Security Audit Report,Not Started,2,P2
