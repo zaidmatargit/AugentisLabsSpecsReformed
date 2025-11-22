@@ -1,0 +1,447 @@
+openapi: 3.0.0
+info:
+  title: AugentisLabs Design Phase API
+  description: UI/UX and system architecture generation
+  version: 1.0.0
+servers:
+  - url: https://api.augentislabs.com
+
+paths:
+  /api/ventures/{ventureId}/design:
+    post:
+      summary: Start Design phase (generate wireframes and architecture)
+      operationId: startDesign
+      tags:
+        - Design Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "202":
+          description: Design phase started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  venture_id:
+                    type: string
+                  phase:
+                    type: string
+                    enum: [DESIGN]
+                  status:
+                    type: string
+                    enum: [IN_PROGRESS]
+
+  /api/ventures/{ventureId}/design/wireframes:
+    get:
+      summary: Get generated wireframes
+      operationId: getWireframes
+      tags:
+        - Design Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: user_story_id
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+      responses:
+        "200":
+          description: List of wireframes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                  coverage_percent:
+                    type: number
+                    description: Percentage of user stories covered by wireframes
+                  wireframes:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Wireframe"
+
+  /api/ventures/{ventureId}/design/design-system:
+    get:
+      summary: Get design system (components, colors, typography)
+      operationId: getDesignSystem
+      tags:
+        - Design Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Design system
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DesignSystem"
+
+  /api/ventures/{ventureId}/design/architecture:
+    get:
+      summary: Get C4 architecture diagram and OpenAPI spec
+      operationId: getArchitecture
+      tags:
+        - Design Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Architecture specification
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Architecture"
+
+  /api/ventures/{ventureId}/design/journey-maps:
+    get:
+      summary: Get end-to-end user journey maps
+      operationId: getJourneyMaps
+      tags:
+        - Design Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: persona_id
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Journey maps
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  journey_maps:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/JourneyMap"
+
+  /api/ventures/{ventureId}/dsp:
+    get:
+      summary: Get DSP (Design Specification Progress) score
+      operationId: getDSPScore
+      tags:
+        - Quality Gates
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: DSP assessment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GateAssessment"
+
+    post:
+      summary: Submit DSP gate decision
+      operationId: submitDSPDecision
+      tags:
+        - Quality Gates
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                decision:
+                  type: string
+                  enum: [PASS, CONDITIONAL, FAIL]
+                rationale:
+                  type: string
+              required:
+                - decision
+                - rationale
+      responses:
+        "200":
+          description: Gate decision recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GateDecision"
+
+  /api/ventures/{ventureId}/design/export:
+    get:
+      summary: Export all design assets as ZIP
+      operationId: exportDesignArtifacts
+      tags:
+        - Design Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ZIP file with wireframes, design system, architecture
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+
+components:
+  schemas:
+    Wireframe:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        screen_number:
+          type: integer
+        svg_url:
+          type: string
+        user_stories:
+          type: array
+          items:
+            type: string
+        components_used:
+          type: array
+          items:
+            type: string
+        accessibility_notes:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    DesignSystem:
+      type: object
+      properties:
+        name:
+          type: string
+        colors:
+          type: object
+          properties:
+            primary:
+              type: string
+            secondary:
+              type: string
+            neutral:
+              type: string
+            error:
+              type: string
+            success:
+              type: string
+            warning:
+              type: string
+        typography:
+          type: object
+          properties:
+            heading1:
+              type: string
+            heading2:
+              type: string
+            heading3:
+              type: string
+            body:
+              type: string
+            small:
+              type: string
+        spacing:
+          type: object
+          properties:
+            xs:
+              type: string
+            sm:
+              type: string
+            md:
+              type: string
+            lg:
+              type: string
+            xl:
+              type: string
+        components:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              variants:
+                type: array
+                items:
+                  type: string
+              states:
+                type: array
+                items:
+                  type: string
+        accessibility:
+          type: object
+          properties:
+            wcag_level:
+              type: string
+              enum: [A, AA, AAA]
+            color_contrast_ratio:
+              type: string
+            keyboard_navigation:
+              type: boolean
+
+    Architecture:
+      type: object
+      properties:
+        c4_diagram:
+          type: object
+          properties:
+            context:
+              type: string
+              description: System context level
+            containers:
+              type: string
+              description: Container level
+            components:
+              type: string
+              description: Component level
+            code:
+              type: string
+              description: Code level
+        openapi_spec:
+          type: object
+          properties:
+            endpoints:
+              type: array
+              items:
+                type: object
+            schemas:
+              type: object
+            security:
+              type: object
+        database_erd:
+          type: string
+          description: Entity relationship diagram
+        deployment_topology:
+          type: string
+          description: Production deployment architecture
+
+    JourneyMap:
+      type: object
+      properties:
+        id:
+          type: string
+        persona_name:
+          type: string
+        goal:
+          type: string
+        phases:
+          type: array
+          items:
+            type: object
+            properties:
+              phase_name:
+                type: string
+              touchpoints:
+                type: array
+                items:
+                  type: string
+              actions:
+                type: array
+                items:
+                  type: string
+              pain_points:
+                type: array
+                items:
+                  type: string
+              opportunities:
+                type: array
+                items:
+                  type: string
+              emotion:
+                type: string
+                enum:
+                  [very_negative, negative, neutral, positive, very_positive]
+
+    GateAssessment:
+      type: object
+      properties:
+        gate_type:
+          type: string
+          enum: [VRC, VCD, DSP, MDP]
+        score:
+          type: integer
+          minimum: 0
+          maximum: 100
+        decision:
+          type: string
+          enum: [PASS, CONDITIONAL, FAIL]
+        indicators:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              score:
+                type: integer
+              evidence_tier:
+                type: string
+
+    GateDecision:
+      type: object
+      properties:
+        id:
+          type: string
+        venture_id:
+          type: string
+        gate_type:
+          type: string
+        score:
+          type: integer
+        decision:
+          type: string
+        decided_by:
+          type: string
+        decided_at:
+          type: string
+          format: date-time
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []

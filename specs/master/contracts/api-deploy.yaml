@@ -1,0 +1,481 @@
+openapi: 3.0.0
+info:
+  title: AugentisLabs Deploy Phase API
+  description: Production deployment, monitoring, and divergence detection
+  version: 1.0.0
+servers:
+  - url: https://api.augentislabs.com
+
+paths:
+  /api/ventures/{ventureId}/deploy:
+    post:
+      summary: Deploy to production
+      operationId: deployToProduction
+      tags:
+        - Deploy Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                environment:
+                  type: string
+                  enum: [staging, production]
+                  default: staging
+      responses:
+        "202":
+          description: Deployment initiated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  venture_id:
+                    type: string
+                  phase:
+                    type: string
+                    enum: [DEPLOY]
+                  status:
+                    type: string
+                    enum: [IN_PROGRESS]
+                  deployment_id:
+                    type: string
+
+  /api/ventures/{ventureId}/deploy/status:
+    get:
+      summary: Check deployment status
+      operationId: getDeploymentStatus
+      tags:
+        - Deploy Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Deployment status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  venture_id:
+                    type: string
+                  status:
+                    type: string
+                    enum: [IN_PROGRESS, COMPLETED, FAILED]
+                  deployed_at:
+                    type: string
+                    format: date-time
+                  app_url:
+                    type: string
+                  smoke_tests:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                      passed:
+                        type: integer
+                      failed:
+                        type: integer
+
+  /api/ventures/{ventureId}/telemetry/dashboards:
+    get:
+      summary: Get live telemetry dashboards
+      operationId: getTelemetryDashboards
+      tags:
+        - Deploy Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: timeframe
+          in: query
+          schema:
+            type: string
+            enum: [24h, 7d, 30d]
+            default: 7d
+      responses:
+        "200":
+          description: Telemetry data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TelemetryDashboard"
+
+  /api/ventures/{ventureId}/telemetry/cohorts:
+    get:
+      summary: Get user cohort analysis
+      operationId: getCohortAnalysis
+      tags:
+        - Deploy Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Cohort breakdown
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cohorts:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Cohort"
+
+  /api/ventures/{ventureId}/telemetry/retention:
+    get:
+      summary: Get retention curves (D1, D7, D30)
+      operationId: getRetentionCurves
+      tags:
+        - Deploy Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Retention data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  d1_retention:
+                    type: number
+                  d7_retention:
+                    type: number
+                  d30_retention:
+                    type: number
+                  retention_curve:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        day:
+                          type: integer
+                        retention_percent:
+                          type: number
+
+  /api/ventures/{ventureId}/divergence/reports:
+    get:
+      summary: Get divergence analysis reports
+      operationId: getDivergenceReports
+      tags:
+        - Deploy Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: classification
+          in: query
+          schema:
+            type: string
+            enum: [MAJOR, MINOR, COSMETIC]
+      responses:
+        "200":
+          description: Divergence reports
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reports:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/DivergenceReport"
+
+  /api/ventures/{ventureId}/divergence/accept-updates:
+    post:
+      summary: Accept proposed Define phase updates (cascade re-execution)
+      operationId: acceptDivergenceUpdates
+      tags:
+        - Deploy Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                report_ids:
+                  type: array
+                  items:
+                    type: string
+                  description: Divergence report IDs to act upon
+              required:
+                - report_ids
+      responses:
+        "202":
+          description: Updates accepted, cascade re-execution triggered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cascade_execution_id:
+                    type: string
+                  affected_stories:
+                    type: array
+                    items:
+                      type: string
+                  affected_screens:
+                    type: array
+                    items:
+                      type: string
+                  affected_code_modules:
+                    type: array
+                    items:
+                      type: string
+                  estimated_hours:
+                    type: number
+
+  /api/organizations/{orgId}/cost-dashboard:
+    get:
+      summary: Get organization-level cost dashboard
+      operationId: getCostDashboard
+      tags:
+        - Governance
+      parameters:
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Cost overview
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_spend_ytd:
+                    type: number
+                  monthly_forecast:
+                    type: number
+                  budget_threshold:
+                    type: number
+                  alert_level:
+                    type: string
+                    enum: [GREEN, YELLOW, RED]
+                  ventures:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        venture_id:
+                          type: string
+                        venture_name:
+                          type: string
+                        total_cost:
+                          type: number
+                        cost_by_phase:
+                          type: object
+
+  /api/organizations/{orgId}/audit-logs:
+    get:
+      summary: Get organization audit logs
+      operationId: getAuditLogs
+      tags:
+        - Governance
+      parameters:
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: action
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+      responses:
+        "200":
+          description: Audit log entries
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                  logs:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        action:
+                          type: string
+                        actor:
+                          type: string
+                        resource_type:
+                          type: string
+                        resource_id:
+                          type: string
+                        changes:
+                          type: object
+                        timestamp:
+                          type: string
+                          format: date-time
+
+components:
+  schemas:
+    TelemetryDashboard:
+      type: object
+      properties:
+        venture_id:
+          type: string
+        feature_usage:
+          type: object
+          properties:
+            total_users:
+              type: integer
+            active_users_today:
+              type: integer
+            features_used:
+              type: array
+              items:
+                type: object
+                properties:
+                  feature_name:
+                    type: string
+                  usage_count:
+                    type: integer
+                  percent_users:
+                    type: number
+        performance_metrics:
+          type: object
+          properties:
+            api_latency_p50:
+              type: number
+              description: milliseconds
+            api_latency_p95:
+              type: number
+              description: milliseconds
+            api_latency_p99:
+              type: number
+              description: milliseconds
+            frontend_lcp:
+              type: number
+              description: Largest Contentful Paint in milliseconds
+            error_rate:
+              type: number
+              description: Percent of requests with errors
+        crash_reporting:
+          type: object
+          properties:
+            total_crashes:
+              type: integer
+            crash_rate:
+              type: number
+            top_crash_reasons:
+              type: array
+              items:
+                type: string
+
+    Cohort:
+      type: object
+      properties:
+        cohort_name:
+          type: string
+        user_count:
+          type: integer
+        signup_date:
+          type: string
+          format: date
+        ltv:
+          type: number
+          description: Lifetime value
+        churn_rate:
+          type: number
+        avg_session_duration:
+          type: number
+          description: seconds
+        feature_adoption:
+          type: array
+          items:
+            type: object
+            properties:
+              feature:
+                type: string
+              adoption_percent:
+                type: number
+
+    DivergenceReport:
+      type: object
+      properties:
+        id:
+          type: string
+        divergence_type:
+          type: string
+        assumed_value:
+          type: string
+        actual_value:
+          type: string
+        confidence_score:
+          type: integer
+        classification:
+          type: string
+          enum: [MAJOR, MINOR, COSMETIC]
+        affected_user_stories:
+          type: array
+          items:
+            type: string
+        affected_design_screens:
+          type: array
+          items:
+            type: string
+        affected_code_modules:
+          type: array
+          items:
+            type: string
+        effort_estimate_hours:
+          type: number
+        recommendation:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []

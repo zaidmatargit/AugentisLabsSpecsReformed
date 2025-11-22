@@ -1,0 +1,393 @@
+openapi: 3.0.0
+info:
+  title: AugentisLabs Define Phase API
+  description: Market positioning and product requirements definition
+  version: 1.0.0
+servers:
+  - url: https://api.augentislabs.com
+
+paths:
+  /api/ventures/{ventureId}/artifacts/upload:
+    post:
+      summary: Upload market research document (PDF, transcript, etc.)
+      operationId: uploadArtifact
+      tags:
+        - Define Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                artifact_type:
+                  type: string
+                  enum: [interview_transcript, survey_data, market_research, competitor_analysis]
+              required:
+                - file
+                - artifact_type
+      responses:
+        '201':
+          description: File uploaded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  artifact_id:
+                    type: string
+                  s3_url:
+                    type: string
+                  file_size:
+                    type: integer
+                  uploaded_at:
+                    type: string
+                    format: date-time
+
+  /api/ventures/{ventureId}/define:
+    post:
+      summary: Start Define phase (process uploaded research)
+      operationId: startDefine
+      tags:
+        - Define Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                artifact_ids:
+                  type: array
+                  items:
+                    type: string
+                  description: IDs of uploaded research documents
+              required:
+                - artifact_ids
+      responses:
+        '202':
+          description: Define phase started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  venture_id:
+                    type: string
+                  phase:
+                    type: string
+                    enum: [DEFINE]
+                  status:
+                    type: string
+                    enum: [IN_PROGRESS]
+
+  /api/ventures/{ventureId}/define/personas:
+    get:
+      summary: Get generated customer personas
+      operationId: getPersonas
+      tags:
+        - Define Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Customer personas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  personas:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Persona'
+                  generated_at:
+                    type: string
+                    format: date-time
+
+  /api/ventures/{ventureId}/define/prd:
+    get:
+      summary: Get generated Product Requirements Document
+      operationId: getPRD
+      tags:
+        - Define Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: version
+          in: query
+          schema:
+            type: integer
+            default: 1
+      responses:
+        '200':
+          description: Product Requirements Document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PRD'
+
+  /api/ventures/{ventureId}/vcd:
+    get:
+      summary: Get VCD (Validation & Clarity Degree) score
+      operationId: getVCDScore
+      tags:
+        - Quality Gates
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: VCD assessment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GateAssessment'
+
+    post:
+      summary: Submit VCD gate decision
+      operationId: submitVCDDecision
+      tags:
+        - Quality Gates
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                decision:
+                  type: string
+                  enum: [PASS, CONDITIONAL, FAIL]
+                rationale:
+                  type: string
+              required:
+                - decision
+                - rationale
+      responses:
+        '200':
+          description: Gate decision recorded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GateDecision'
+
+  /api/ventures/{ventureId}/define/export:
+    get:
+      summary: Export Define phase artifacts as ZIP
+      operationId: exportDefineArtifacts
+      tags:
+        - Define Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ZIP file with all Define artifacts
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+
+components:
+  schemas:
+    Persona:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        archetype:
+          type: string
+        demographics:
+          type: object
+          properties:
+            age_range:
+              type: string
+            gender:
+              type: string
+            income:
+              type: string
+            location:
+              type: string
+        psychographics:
+          type: object
+          properties:
+            values:
+              type: array
+              items:
+                type: string
+            motivations:
+              type: array
+              items:
+                type: string
+            pain_points:
+              type: array
+              items:
+                type: string
+        jobs_to_be_done:
+          type: array
+          items:
+            type: object
+            properties:
+              job:
+                type: string
+              importance:
+                type: string
+                enum: [critical, important, nice_to_have]
+        buying_triggers:
+          type: array
+          items:
+            type: string
+        decision_criteria:
+          type: array
+          items:
+            type: string
+        evidence_tier:
+          type: string
+          enum: [E0, E1, E2, E3, E4]
+
+    PRD:
+      type: object
+      properties:
+        version:
+          type: integer
+        venture_id:
+          type: string
+        executive_summary:
+          type: string
+        market_overview:
+          type: string
+        target_customers:
+          type: array
+          items:
+            type: string
+        user_stories:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              story:
+                type: string
+              priority:
+                type: string
+                enum: [P0, P1, P2, P3]
+              acceptance_criteria:
+                type: array
+                items:
+                  type: string
+              effort_estimate:
+                type: string
+        success_metrics:
+          type: array
+          items:
+            type: string
+        business_model:
+          type: string
+        pricing_strategy:
+          type: string
+        competitive_positioning:
+          type: string
+        risks_and_mitigations:
+          type: array
+          items:
+            type: object
+            properties:
+              risk:
+                type: string
+              mitigation:
+                type: string
+        created_at:
+          type: string
+          format: date-time
+
+    GateAssessment:
+      type: object
+      properties:
+        gate_type:
+          type: string
+          enum: [VRC, VCD, DSP, MDP]
+        score:
+          type: integer
+          minimum: 0
+          maximum: 100
+        decision:
+          type: string
+          enum: [PASS, CONDITIONAL, FAIL]
+        indicators:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              score:
+                type: integer
+              evidence_tier:
+                type: string
+
+    GateDecision:
+      type: object
+      properties:
+        id:
+          type: string
+        venture_id:
+          type: string
+        gate_type:
+          type: string
+        score:
+          type: integer
+        decision:
+          type: string
+        decided_by:
+          type: string
+        decided_at:
+          type: string
+            format: date-time
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []

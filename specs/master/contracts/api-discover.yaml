@@ -1,0 +1,476 @@
+openapi: 3.0.0
+info:
+  title: AugentisLabs Discover Phase API
+  description: Venture idea validation and market research
+  version: 1.0.0
+servers:
+  - url: https://api.augentislabs.com
+    description: Production
+
+paths:
+  /api/ventures:
+    post:
+      summary: Create a new venture
+      operationId: createVenture
+      tags:
+        - Ventures
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 3
+                  maxLength: 255
+                description:
+                  type: string
+                  maxLength: 5000
+              required:
+                - name
+      responses:
+        "201":
+          description: Venture created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Venture"
+        "400":
+          description: Invalid request body
+        "401":
+          description: Unauthorized
+        "403":
+          description: Organization quota exceeded
+
+    get:
+      summary: List all ventures for current organization
+      operationId: listVentures
+      tags:
+        - Ventures
+      parameters:
+        - name: phase
+          in: query
+          schema:
+            type: string
+            enum: [DISCOVER, DEFINE, DESIGN, DEVELOP, DEPLOY]
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [IN_PROGRESS, COMPLETED, FAILED, PAUSED]
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        "200":
+          description: List of ventures
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Venture"
+
+  /api/ventures/{ventureId}:
+    get:
+      summary: Get venture details
+      operationId: getVenture
+      tags:
+        - Ventures
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Venture details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Venture"
+        "404":
+          description: Venture not found
+
+  /api/ventures/{ventureId}/discover:
+    post:
+      summary: Start Discover phase (trigger agent execution)
+      operationId: startDiscover
+      tags:
+        - Discover Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idea_description:
+                  type: string
+                  description: 2-3 sentence business idea
+                  minLength: 20
+                  maxLength: 1000
+              required:
+                - idea_description
+      responses:
+        "202":
+          description: Discover phase started (async processing)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  venture_id:
+                    type: string
+                  phase:
+                    type: string
+                    enum: [DISCOVER]
+                  status:
+                    type: string
+                    enum: [IN_PROGRESS]
+
+  /api/ventures/{ventureId}/discover/status:
+    get:
+      summary: Check Discover phase progress
+      operationId: getDiscoverStatus
+      tags:
+        - Discover Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Current progress
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  venture_id:
+                    type: string
+                  phase:
+                    type: string
+                  status:
+                    type: string
+                    enum: [IN_PROGRESS, COMPLETE]
+                  agents_completed:
+                    type: array
+                    items:
+                      type: string
+                      enum:
+                        - problem_validator
+                        - research_scout
+                        - signal_miner
+                        - opportunity_scorer
+                  progress_percent:
+                    type: integer
+                    minimum: 0
+                    maximum: 100
+                  estimated_completion:
+                    type: string
+                    format: date-time
+
+  /api/ventures/{ventureId}/discover/results:
+    get:
+      summary: Get Discover phase results (all agent outputs)
+      operationId: getDiscoverResults
+      tags:
+        - Discover Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Discover phase results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  venture_id:
+                    type: string
+                  problem_validation:
+                    $ref: "#/components/schemas/ProblemValidation"
+                  competitive_analysis:
+                    $ref: "#/components/schemas/CompetitiveAnalysis"
+                  market_signals:
+                    $ref: "#/components/schemas/MarketSignals"
+                  opportunity_sizing:
+                    $ref: "#/components/schemas/OpportunitySizing"
+                  completed_at:
+                    type: string
+                    format: date-time
+
+  /api/ventures/{ventureId}/vrc:
+    get:
+      summary: Get VRC (Venture Readiness Compass) score
+      operationId: getVRCScore
+      tags:
+        - Quality Gates
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: VRC assessment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GateAssessment"
+
+    post:
+      summary: Submit VRC gate decision (PASS/CONDITIONAL/FAIL)
+      operationId: submitVRCDecision
+      tags:
+        - Quality Gates
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                decision:
+                  type: string
+                  enum: [PASS, CONDITIONAL, FAIL]
+                rationale:
+                  type: string
+                  minLength: 50
+              required:
+                - decision
+                - rationale
+      responses:
+        "200":
+          description: Gate decision recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GateDecision"
+
+components:
+  schemas:
+    Venture:
+      type: object
+      properties:
+        id:
+          type: string
+        org_id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        phase:
+          type: string
+          enum: [DISCOVER, DEFINE, DESIGN, DEVELOP, DEPLOY]
+        status:
+          type: string
+          enum: [IN_PROGRESS, COMPLETED, FAILED, PAUSED]
+        vrc_score:
+          type: integer
+          nullable: true
+        vrc_decision:
+          type: string
+          nullable: true
+          enum: [PASS, CONDITIONAL, FAIL]
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    ProblemValidation:
+      type: object
+      properties:
+        problem_statement:
+          type: string
+        clarity_score:
+          type: integer
+          minimum: 0
+          maximum: 100
+        target_market:
+          type: string
+        affected_users:
+          type: string
+        severity_level:
+          type: string
+          enum: [HIGH, MEDIUM, LOW]
+        evidence_tier:
+          type: string
+          enum: [E0, E1, E2, E3, E4]
+
+    CompetitiveAnalysis:
+      type: object
+      properties:
+        competitors_found:
+          type: integer
+        competitor_matrix:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              features:
+                type: array
+                items:
+                  type: string
+              pricing:
+                type: string
+              strengths:
+                type: array
+                items:
+                  type: string
+              gaps:
+                type: array
+                items:
+                  type: string
+        market_gaps:
+          type: array
+          items:
+            type: string
+        evidence_tier:
+          type: string
+
+    MarketSignals:
+      type: object
+      properties:
+        search_volume:
+          type: integer
+        trending:
+          type: boolean
+        social_mentions:
+          type: integer
+        community_discussions:
+          type: array
+          items:
+            type: string
+        reddit_discussions:
+          type: integer
+        evidence_tier:
+          type: string
+
+    OpportunitySizing:
+      type: object
+      properties:
+        tam:
+          type: string
+          description: Total Addressable Market
+        sam:
+          type: string
+          description: Serviceable Available Market
+        som:
+          type: string
+          description: Serviceable Obtainable Market
+        market_growth_rate:
+          type: string
+        confidence_score:
+          type: integer
+          minimum: 0
+          maximum: 100
+        evidence_tier:
+          type: string
+
+    GateAssessment:
+      type: object
+      properties:
+        gate_type:
+          type: string
+          enum: [VRC, VCD, DSP, MDP]
+        score:
+          type: integer
+          minimum: 0
+          maximum: 100
+        decision:
+          type: string
+          enum: [PASS, CONDITIONAL, FAIL]
+        indicators:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              score:
+                type: integer
+              evidence_tier:
+                type: string
+              reasoning:
+                type: string
+        lowest_indicators:
+          type: array
+          items:
+            type: string
+        remediation_guidance:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+
+    GateDecision:
+      type: object
+      properties:
+        id:
+          type: string
+        venture_id:
+          type: string
+        gate_type:
+          type: string
+        score:
+          type: integer
+        decision:
+          type: string
+        decided_by:
+          type: string
+        decided_at:
+          type: string
+          format: date-time
+        rationale:
+          type: string
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []

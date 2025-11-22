@@ -1,0 +1,362 @@
+openapi: 3.0.0
+info:
+  title: AugentisLabs Develop Phase API
+  description: Code generation and production deployment preparation
+  version: 1.0.0
+servers:
+  - url: https://api.augentislabs.com
+
+paths:
+  /api/ventures/{ventureId}/develop:
+    post:
+      summary: Start Develop phase (generate production code)
+      operationId: startDevelop
+      tags:
+        - Develop Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "202":
+          description: Develop phase started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  venture_id:
+                    type: string
+                  phase:
+                    type: string
+                    enum: [DEVELOP]
+                  status:
+                    type: string
+                    enum: [IN_PROGRESS]
+
+  /api/ventures/{ventureId}/develop/status:
+    get:
+      summary: Check Develop phase progress
+      operationId: getDevelopStatus
+      tags:
+        - Develop Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Current progress
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  venture_id:
+                    type: string
+                  phase:
+                    type: string
+                  status:
+                    type: string
+                  agents_completed:
+                    type: array
+                    items:
+                      type: string
+                  progress_percent:
+                    type: integer
+
+  /api/ventures/{ventureId}/develop/code:
+    get:
+      summary: Download generated codebase
+      operationId: downloadCode
+      tags:
+        - Develop Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: format
+          in: query
+          schema:
+            type: string
+            enum: [zip, tar.gz, github_push]
+            default: zip
+      responses:
+        "200":
+          description: Codebase as ZIP or pushed to GitHub
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+
+  /api/ventures/{ventureId}/develop/tests:
+    get:
+      summary: Get generated test files
+      operationId: getTestFiles
+      tags:
+        - Develop Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: test_type
+          in: query
+          schema:
+            type: string
+            enum: [unit, integration, e2e, contract]
+      responses:
+        "200":
+          description: Test files and configuration
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  test_type:
+                    type: string
+                  total_tests:
+                    type: integer
+                  passing_tests:
+                    type: integer
+                  failing_tests:
+                    type: integer
+                  coverage_percent:
+                    type: number
+                  test_files:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        file_path:
+                          type: string
+                        test_count:
+                          type: integer
+
+  /api/ventures/{ventureId}/develop/security-scan:
+    get:
+      summary: Get security scan results
+      operationId: getSecurityScan
+      tags:
+        - Develop Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Security audit report
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecurityScanResult"
+
+  /api/ventures/{ventureId}/mdp:
+    get:
+      summary: Get MDP (Minimum Deployable Product) score
+      operationId: getMDPScore
+      tags:
+        - Quality Gates
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: MDP assessment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GateAssessment"
+
+    post:
+      summary: Submit MDP gate decision
+      operationId: submitMDPDecision
+      tags:
+        - Quality Gates
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                decision:
+                  type: string
+                  enum: [PASS, CONDITIONAL, FAIL]
+                rationale:
+                  type: string
+              required:
+                - decision
+                - rationale
+      responses:
+        "200":
+          description: Gate decision recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GateDecision"
+
+  /api/ventures/{ventureId}/develop/export:
+    get:
+      summary: Export complete development package
+      operationId: exportDevelopArtifacts
+      tags:
+        - Develop Phase
+      parameters:
+        - name: ventureId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ZIP with code, tests, docs, security scan
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+
+components:
+  schemas:
+    SecurityScanResult:
+      type: object
+      properties:
+        scan_timestamp:
+          type: string
+          format: date-time
+        total_issues:
+          type: integer
+        critical_issues:
+          type: integer
+        high_issues:
+          type: integer
+        medium_issues:
+          type: integer
+        low_issues:
+          type: integer
+        owasp_top10:
+          type: object
+          properties:
+            injection:
+              type: object
+            broken_authentication:
+              type: object
+            sensitive_data_exposure:
+              type: object
+            xml_external_entities:
+              type: object
+            broken_access_control:
+              type: object
+        dependency_vulnerabilities:
+          type: array
+          items:
+            type: object
+            properties:
+              package:
+                type: string
+              version:
+                type: string
+              vulnerability:
+                type: string
+              cvss_score:
+                type: number
+              fix_available:
+                type: boolean
+        remediation_patches:
+          type: array
+          items:
+            type: object
+            properties:
+              file_path:
+                type: string
+              change_description:
+                type: string
+              priority:
+                type: string
+                enum: [critical, high, medium, low]
+        compliance_checklist:
+          type: object
+          properties:
+            secrets_management:
+              type: boolean
+            data_encryption:
+              type: boolean
+            audit_logging:
+              type: boolean
+            api_rate_limiting:
+              type: boolean
+            input_validation:
+              type: boolean
+
+    GateAssessment:
+      type: object
+      properties:
+        gate_type:
+          type: string
+          enum: [VRC, VCD, DSP, MDP]
+        score:
+          type: integer
+          minimum: 0
+          maximum: 100
+        decision:
+          type: string
+          enum: [PASS, CONDITIONAL, FAIL]
+        indicators:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              score:
+                type: integer
+              evidence_tier:
+                type: string
+
+    GateDecision:
+      type: object
+      properties:
+        id:
+          type: string
+        venture_id:
+          type: string
+        gate_type:
+          type: string
+        score:
+          type: integer
+        decision:
+          type: string
+        decided_by:
+          type: string
+        decided_at:
+          type: string
+          format: date-time
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []
