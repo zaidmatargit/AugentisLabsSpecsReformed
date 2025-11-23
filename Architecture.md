@@ -1078,12 +1078,9 @@ graph TB
     style T9 fill:#fff3e0
     style T11 fill:#ffe0b2
     style T15 fill:#f8bbd0
-```
-
-    end
 
     subgraph "Telemetry & Analytics"
-        T13["telemetry<br/>venture_id, metric_name, recorded_at"]
+        T13["telemetry<br/>project_id, metric_name, recorded_at"]
         T14["telemetry_events<br/>event_type, event_data, occurred_at"]
         T15["divergence_analysis<br/>assumption_vs_reality, impact"]
     end
@@ -1109,7 +1106,7 @@ graph TB
     style T10 fill:#ffe0b2
     style T13 fill:#f8bbd0
 
-````
+```
 
 ---
 
@@ -1202,7 +1199,7 @@ graph TB
     style DB_PRIMARY fill:#c8e6c9
     style BULL fill:#f8bbd0
     style LOG fill:#ffcdd2
-````
+```
 
 ---
 
