@@ -278,9 +278,10 @@ graph LR
     end
 
     subgraph "Deployment Agents"
-        A1["Deployment<br/>Agent"]
-        A2["Telemetry<br/>Aggregator"]
-        A3["Divergence<br/>Detector"]
+        A1["Infrastructure<br/>Provisioner"]
+        A2["Monitoring<br/>Agent"]
+        A3["Optimization<br/>Agent"]
+        A4["Launch<br/>Coordinator"]
     end
 
     subgraph "Deployment Targets"
@@ -292,7 +293,7 @@ graph LR
         MON1["Feature Usage<br/>Tracking"]
         MON2["User Cohorts<br/>Day 1/7/30"]
         MON3["Crash Reports"]
-        MON4["Assumption vs<br/>Reality"]
+        MON4["Performance<br/>Optimization"]
     end
 
     INPUT --> A1
@@ -305,6 +306,8 @@ graph LR
     A2 --> MON2
     A2 --> MON3
     A3 --> MON4
+    A4 --> TARGET1
+    A4 --> TARGET2
 
     style A1 fill:#4caf50
     style TARGET1 fill:#2196f3
@@ -318,43 +321,44 @@ graph LR
 ```mermaid
 graph TB
     subgraph "DISCOVER Phase - 4 Agents"
-        D1["Market Research"]
-        D2["Competitor Analysis"]
-        D3["Trend Analysis"]
-        D4["Market Sizing"]
+        D1["Problem Validation"]
+        D2["Competitive Analysis"]
+        D3["Opportunity Scoring"]
+        D4["VRC Assessment"]
     end
 
     subgraph "DEFINE Phase - 5 Agents"
-        DE1["Interview Ingestion"]
-        DE2["Persona Builder"]
-        DE3["Requirements Generator"]
-        DE4["Business Model Validator"]
-        DE5["VCD Assembler"]
+        DE1["Market Research"]
+        DE2["Persona Building"]
+        DE3["Requirements Specification"]
+        DE4["Feasibility Analysis"]
+        DE5["VCD Assembly"]
     end
 
     subgraph "DESIGN Phase - 6 Agents"
-        DES1["UX Agent"]
-        DES2["Architecture Designer"]
-        DES3["Design System Builder"]
-        DES4["Branding Agent"]
-        DES5["Journey Mapper"]
-        DES6["DSP Assembler"]
+        DES1["UX/UI Design"]
+        DES2["Architecture"]
+        DES3["Branding"]
+        DES4["Journey Mapping"]
+        DES5["Prototyping"]
+        DES6["DSP Assembly"]
     end
 
     subgraph "DEVELOP Phase - 7 Agents"
-        DEV1["Backend Generator"]
-        DEV2["Frontend Generator"]
-        DEV3["Test Generator"]
-        DEV4["Schema Generator"]
-        DEV5["Code Generator Service"]
-        DEV6["Security Scanner"]
-        DEV7["Performance Profiler"]
+        DEV1["Code Generation"]
+        DEV2["Testing"]
+        DEV3["Documentation"]
+        DEV4["Security Scanning"]
+        DEV5["Quality Gates"]
+        DEV6["Performance Optimization"]
+        DEV7["MDP Assembly"]
     end
 
-    subgraph "DEPLOY Phase - 3 Agents"
-        DP1["Deployment Agent"]
-        DP2["Telemetry Aggregator"]
-        DP3["Divergence Detector"]
+    subgraph "DEPLOY Phase - 4 Agents"
+        DP1["Infrastructure Provisioning"]
+        DP2["Monitoring Setup"]
+        DP3["Optimization"]
+        DP4["Launch Coordination"]
     end
 
     subgraph "Cross-Phase - 1 Agent"

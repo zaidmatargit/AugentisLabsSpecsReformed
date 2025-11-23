@@ -7,14 +7,14 @@ servers:
   - url: https://api.augentislabs.com
 
 paths:
-  /api/ventures/{ventureId}/develop:
+  /api/projects/{projectId}/develop:
     post:
       summary: Start Develop phase (generate production code)
       operationId: startDevelop
       tags:
         - Develop Phase
       parameters:
-        - name: ventureId
+        - name: projectId
           in: path
           required: true
           schema:
@@ -27,7 +27,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  venture_id:
+                  project_id:
                     type: string
                   phase:
                     type: string
@@ -36,14 +36,14 @@ paths:
                     type: string
                     enum: [IN_PROGRESS]
 
-  /api/ventures/{ventureId}/develop/status:
+  /api/projects/{projectId}/develop/status:
     get:
       summary: Check Develop phase progress
       operationId: getDevelopStatus
       tags:
         - Develop Phase
       parameters:
-        - name: ventureId
+        - name: projectId
           in: path
           required: true
           schema:
@@ -56,7 +56,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  venture_id:
+                  project_id:
                     type: string
                   phase:
                     type: string
@@ -69,14 +69,14 @@ paths:
                   progress_percent:
                     type: integer
 
-  /api/ventures/{ventureId}/develop/code:
+  /api/projects/{projectId}/develop/code:
     get:
       summary: Download generated codebase
       operationId: downloadCode
       tags:
         - Develop Phase
       parameters:
-        - name: ventureId
+        - name: projectId
           in: path
           required: true
           schema:
@@ -96,14 +96,14 @@ paths:
                 type: string
                 format: binary
 
-  /api/ventures/{ventureId}/develop/tests:
+  /api/projects/{projectId}/develop/tests:
     get:
       summary: Get generated test files
       operationId: getTestFiles
       tags:
         - Develop Phase
       parameters:
-        - name: ventureId
+        - name: projectId
           in: path
           required: true
           schema:
@@ -141,14 +141,14 @@ paths:
                         test_count:
                           type: integer
 
-  /api/ventures/{ventureId}/develop/security-scan:
+  /api/projects/{projectId}/develop/security-scan:
     get:
       summary: Get security scan results
       operationId: getSecurityScan
       tags:
         - Develop Phase
       parameters:
-        - name: ventureId
+        - name: projectId
           in: path
           required: true
           schema:
@@ -161,14 +161,14 @@ paths:
               schema:
                 $ref: "#/components/schemas/SecurityScanResult"
 
-  /api/ventures/{ventureId}/mdp:
+  /api/projects/{projectId}/mdp:
     get:
       summary: Get MDP (Minimum Deployable Product) score
       operationId: getMDPScore
       tags:
         - Quality Gates
       parameters:
-        - name: ventureId
+        - name: projectId
           in: path
           required: true
           schema:
@@ -187,7 +187,7 @@ paths:
       tags:
         - Quality Gates
       parameters:
-        - name: ventureId
+        - name: projectId
           in: path
           required: true
           schema:
@@ -215,14 +215,14 @@ paths:
               schema:
                 $ref: "#/components/schemas/GateDecision"
 
-  /api/ventures/{ventureId}/develop/export:
+  /api/projects/{projectId}/develop/export:
     get:
       summary: Export complete development package
       operationId: exportDevelopArtifacts
       tags:
         - Develop Phase
       parameters:
-        - name: ventureId
+        - name: projectId
           in: path
           required: true
           schema:
@@ -338,7 +338,7 @@ components:
       properties:
         id:
           type: string
-        venture_id:
+        project_id:
           type: string
         gate_type:
           type: string
@@ -360,3 +360,4 @@ components:
 
 security:
   - bearerAuth: []
+

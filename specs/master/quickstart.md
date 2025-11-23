@@ -2,7 +2,7 @@
 
 **Phase**: 1 (Weeks 3-4)  
 **Purpose**: Get backend + frontend running locally in 5 minutes  
-**Prerequisites**: Docker, Node.js 20.x, PostgreSQL 15, Git
+**Prerequisites**: Docker, Python 3.11+, PostgreSQL 15, Git, uv package manager
 
 ---
 
@@ -12,20 +12,23 @@
 
 ```bash
 # Check versions (minimum required)
-node --version    # v20.x or later
-npm --version     # v10.x or later
-docker --version  # Latest
-git --version     # Latest
+python --version    # 3.11 or later
+uv --version        # Latest
+docker --version    # Latest
+git --version       # Latest
 ```
 
 ### Install (macOS)
 
 ```bash
 # Using Homebrew
-brew install node docker git
+brew install python@3.11 uv docker git
+
+# Or install uv (standalone installer - recommended)
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Or download from official sites:
-# - Node.js: https://nodejs.org/
+# - Python: https://www.python.org/downloads/
 # - Docker Desktop: https://www.docker.com/products/docker-desktop
 # - Git: https://git-scm.com/
 ```
@@ -34,7 +37,10 @@ brew install node docker git
 
 ```powershell
 # Using Chocolatey (if installed)
-choco install nodejs docker-desktop git
+choco install python docker-desktop git
+
+# Or install uv using PowerShell
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 
 # Or download from official sites
 ```
@@ -42,9 +48,14 @@ choco install nodejs docker-desktop git
 ### Install (Linux - Ubuntu/Debian)
 
 ```bash
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt-get install -y nodejs docker.io docker-compose git
-sudo usermod -aG docker $USER  # Add user to docker group
+sudo apt-get update
+sudo apt-get install -y python3.11 python3.11-venv python3-pip docker.io docker-compose git
+
+# Install uv (recommended)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Add user to docker group
+sudo usermod -aG docker $USER
 ```
 
 ---
@@ -56,14 +67,11 @@ sudo usermod -aG docker $USER  # Add user to docker group
 git clone https://github.com/augentislabs/augentislabs.git
 cd augentislabs
 
-# Install dependencies
-npm install
+# Install dependencies using uv
+uv sync
 
-# Install backend dependencies
-cd backend && npm install && cd ..
-
-# Install frontend dependencies
-cd frontend && npm install && cd ..
+# Backend uses uv for environment management
+cd backend && uv sync && cd ..
 ```
 
 ---
@@ -99,16 +107,22 @@ LLM_TIMEOUT_MS=300000
 LLM_TOKEN_BUDGET_PER_VENTURE=5000
 LLM_COST_ALERT_THRESHOLD_PERCENT=80
 
-# AWS S3 (for artifact storage)
-AWS_REGION="us-east-1"
-AWS_ACCESS_KEY_ID="your-key"
-AWS_SECRET_ACCESS_KEY="your-secret"
-AWS_S3_BUCKET="augentislabs-dev-artifacts"
+# Langfuse (Agent Observability)
+LANGFUSE_PUBLIC_KEY="your-public-key"
+LANGFUSE_SECRET_KEY="your-secret-key"
+LANGFUSE_HOST="https://cloud.langfuse.com"
+
+# File Storage (Supabase Storage)
+SUPABASE_STORAGE_BUCKET="artifacts"
+
+# RabbitMQ Message Broker
+RABBITMQ_URL="amqp://guest:guest@localhost:5672/"
 
 # Backend Server
-NODE_ENV="development"
-PORT=3000
-API_URL="http://localhost:3000"
+PYTHONENV="development"
+PORT=8000
+API_URL="http://localhost:8000"
+WORKERS=4
 
 # Logging
 LOG_LEVEL="debug"
@@ -120,7 +134,7 @@ LOG_LEVEL="debug"
 # frontend/.env.local
 
 # API Configuration
-NEXT_PUBLIC_API_URL="http://localhost:3000/api"
+NEXT_PUBLIC_API_URL="http://localhost:8000/api"
 NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co"
 NEXT_PUBLIC_SUPABASE_ANON_KEY="your-anon-key"
 
@@ -200,17 +214,14 @@ volumes:
 # Navigate to backend
 cd backend
 
-# Generate Prisma Client
-npx prisma generate
-
-# Run migrations (create tables)
-npx prisma migrate dev --name init
+# Create and apply Alembic migrations
+alembic upgrade head
 
 # Seed test data (optional)
-npx prisma db seed
+python scripts/seed.py
 
-# View database in Prisma Studio
-npx prisma studio
+# View database with pgAdmin
+# Open: http://localhost:5050
 ```
 
 ### What Gets Created
@@ -235,39 +246,34 @@ npx prisma studio
 cd backend
 
 # Install dependencies (if not done)
-npm install
+uv sync
 
-# Start development server (watches for changes)
-npm run dev
+# Start development server (with auto-reload)
+uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
-# Server should be running on http://localhost:3000
-# Check: curl http://localhost:3000/health
+# Server should be running on http://localhost:8000
+# Check: curl http://localhost:8000/health
 ```
 
 ### Backend Startup Output
 
 ```
-[Nest] 12345  - 11/22/2025, 10:30:15 AM     LOG [NestFactory] Starting Nest application...
-[Nest] 12345  - 11/22/2025, 10:30:15 AM     LOG [InstanceLoader] ConfigModule dependencies initialized +25ms
-[Nest] 12345  - 11/22/2025, 10:30:15 AM     LOG [InstanceLoader] PrismaService dependencies initialized +1ms
-[Nest] 12345  - 11/22/2025, 10:30:15 AM     LOG [InstanceLoader] AuthModule dependencies initialized +2ms
-[Nest] 12345  - 11/22/2025, 10:30:16 AM     LOG [InstanceLoader] VenturesModule dependencies initialized +1ms
-[Nest] 12345  - 11/22/2025, 10:30:16 AM     LOG [InstanceLoader] GatesModule dependencies initialized +1ms
-[Nest] 12345  - 11/22/2025, 10:30:16 AM     LOG [InstanceLoader] RoutingModule dependencies initialized +0ms
-[Nest] 12345  - 11/22/2025, 10:30:16 AM     LOG [NestApplication] Nest application successfully started +15ms
-API Server running on http://localhost:3000
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started server process [12345]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete
 ```
 
 ### Test Backend is Running
 
 ```bash
 # In a new terminal
-curl -s http://localhost:3000/health | jq
+curl -s http://localhost:8000/health | jq
 
 # Response:
 # {
 #   "status": "ok",
-#   "timestamp": "2025-11-22T10:30:16.000Z"
+#   "timestamp": "2025-11-22T10:30:16Z"
 # }
 ```
 
@@ -319,13 +325,16 @@ npm run dev
 cd backend
 
 # Run all tests (watch mode)
-npm run test:watch
+uv run pytest --watch
 
 # Run specific test file
-npm run test src/modules/gates/gates.service.spec.ts
+uv run pytest tests/test_gates.py
 
 # Run with coverage
-npm test:cov
+uv run pytest --cov=app
+
+# Run specific test with verbose output
+uv run pytest tests/test_gates.py -v
 ```
 
 ### Frontend Tests
@@ -352,7 +361,7 @@ npx playwright test --debug
 
 ```bash
 # Create a venture
-curl -X POST http://localhost:3000/api/ventures \
+curl -X POST http://localhost:8000/api/ventures \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -d '{
@@ -361,7 +370,7 @@ curl -X POST http://localhost:3000/api/ventures \
   }'
 
 # Start Discover phase
-curl -X POST http://localhost:3000/api/ventures/{ventureId}/discover \
+curl -X POST http://localhost:8000/api/ventures/{ventureId}/discover \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -d '{
@@ -369,7 +378,7 @@ curl -X POST http://localhost:3000/api/ventures/{ventureId}/discover \
   }'
 
 # Get VRC score
-curl -X GET http://localhost:3000/api/ventures/{ventureId}/vrc \
+curl -X GET http://localhost:8000/api/ventures/{ventureId}/vrc \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 
@@ -384,7 +393,7 @@ curl -X GET http://localhost:3000/api/ventures/{ventureId}/vrc \
 
 ```http
 ### Create Venture
-POST http://localhost:3000/api/ventures
+POST http://localhost:8000/api/ventures
 Content-Type: application/json
 Authorization: Bearer {{jwt_token}}
 
@@ -394,7 +403,7 @@ Authorization: Bearer {{jwt_token}}
 }
 
 ### Start Discover Phase
-POST http://localhost:3000/api/ventures/{{venture_id}}/discover
+POST http://localhost:8000/api/ventures/{{venture_id}}/discover
 Content-Type: application/json
 Authorization: Bearer {{jwt_token}}
 
@@ -412,28 +421,25 @@ Authorization: Bearer {{jwt_token}}
 ```bash
 cd backend
 
-# Development server
-npm run dev
-
-# Build for production
-npm run build
+# Development server with auto-reload
+uv run uvicorn app.main:app --reload
 
 # Run tests
-npm test
-npm test:watch
-npm test:cov
+uv run pytest
+uv run pytest --watch
+uv run pytest --cov=app
 
-# Lint code
-npm run lint
-npm run lint:fix
+# Lint code with ruff
+uv run ruff check .
+uv run ruff format .
 
 # Database operations
-npx prisma migrate dev --name migration_name
-npx prisma db seed
-npx prisma studio
+alembic upgrade head          # Apply migrations
+alembic downgrade -1          # Rollback last migration
+alembic revision --autogenerate -m "message"  # Create migration
 
-# View database schema
-npx prisma generate
+# Type checking
+uv run mypy app/
 ```
 
 ### Frontend Commands
@@ -479,6 +485,16 @@ docker-compose exec postgres psql -U postgres -d augentislabs_dev
 
 # Rebuild images
 docker-compose up -d --build
+```
+
+### RabbitMQ Management
+
+```bash
+# Access RabbitMQ Management UI
+open http://localhost:15672
+
+# Default credentials: guest / guest
+# Monitor queues, connections, and message rates
 ```
 
 ---
@@ -570,12 +586,16 @@ After getting local development running:
 
 ### Useful Development Resources
 
-- **Prisma Docs**: https://www.prisma.io/docs/
-- **NestJS Docs**: https://docs.nestjs.com/
-- **Next.js Docs**: https://nextjs.org/docs
+- **FastAPI Docs**: https://fastapi.tiangolo.com/
+- **SQLAlchemy Docs**: https://docs.sqlalchemy.org/
+- **Alembic Docs**: https://alembic.sqlalchemy.org/
+- **pytest Docs**: https://docs.pytest.org/
+- **ruff Docs**: https://docs.astral.sh/ruff/
 - **LangGraph Docs**: https://langchain-ai.github.io/langgraph/
+- **Langfuse Docs**: https://langfuse.com/docs/
 - **OpenAPI Docs**: https://swagger.io/specification/
 - **PostgreSQL Docs**: https://www.postgresql.org/docs/
+- **RabbitMQ Docs**: https://www.rabbitmq.com/documentation.html
 
 ---
 
@@ -583,11 +603,15 @@ After getting local development running:
 
 When ready to deploy:
 
-1. **Backend**: Deploy to Vercel serverless or AWS Lambda
-2. **Frontend**: Deploy to Vercel (next-gen platform)
-3. **Database**: Provision Supabase PostgreSQL instance
-4. **Environment Variables**: Set in production dashboard
-5. **CI/CD**: Configure GitHub Actions for automated deployment
+1. **Backend**: Deploy to Azure App Service with Docker container
+2. **Kubernetes**: Deploy to AKS (Azure Kubernetes Service) for scalability
+3. **Infrastructure**: Provision with Terraform for reproducible deployments
+4. **Database**: Provision Supabase PostgreSQL instance
+5. **Message Queue**: Deploy RabbitMQ for async task processing
+6. **Monitoring**: Set up LGTM stack (Loki/Grafana/Tempo) for observability
+7. **Email**: Configure Resend for production email sending
+8. **Environment Variables**: Set in Azure Key Vault
+9. **CI/CD**: Configure GitHub Actions for automated deployment
 
 See `IMPLEMENTATION.md` Phase 6 for production deployment details.
 

@@ -475,16 +475,28 @@ CREATE POLICY artifact_isolation ON artifacts
 
 ## 7. Architecture Decision Summary
 
-| Decision                | Choice                             | Rationale                                 | Alternatives Rejected                                   |
-| ----------------------- | ---------------------------------- | ----------------------------------------- | ------------------------------------------------------- |
-| **Agent Orchestration** | LangGraph                          | Native state + error recovery             | LangChain (no state), Custom (too complex)              |
-| **Primary LLM**         | GPT-4 Turbo                        | Best code generation (90% usable)         | Claude (85% usable, slower)                             |
-| **Backend Framework**   | NestJS                             | DI, testing, modular architecture         | Express (no DI), Fastify (smaller ecosystem)            |
-| **Frontend**            | Next.js 14                         | SSR + API routes simplify architecture    | SPA (requires separate backend), Remix (learning curve) |
-| **Database**            | PostgreSQL                         | Relational model fits artifact versioning | MongoDB (no joins), Firebase (limited queries)          |
-| **Data Isolation**      | PostgreSQL RLS                     | Secure, standards-based, auditable        | Application-layer filtering (error-prone)               |
-| **Evidence Tiers**      | 5-level (E0-E4)                    | Fine-grained confidence tracking          | 3-level (insufficient)                                  |
-| **Gate Thresholds**     | VRC 76%, VCD 75%, DSP 80%, MDP 85% | Validated through product research        | Higher (too permissive), Lower (blocks progress)        |
+| Decision                | Choice                             | Rationale                                 | Alternatives Rejected                            |
+| ----------------------- | ---------------------------------- | ----------------------------------------- | ------------------------------------------------ |
+| **Agent Orchestration** | LangGraph                          | Native state + error recovery             | LangChain (no state), Custom (too complex)       |
+| **Primary LLM**         | GPT-4 Turbo                        | Best code generation (90% usable)         | Claude (85% usable, slower)                      |
+| **Backend Framework**   | FastAPI                            | Async-first, type-safe, minimal overhead  | Flask (no typing), Django (heavy)                |
+| **Language/Runtime**    | Python 3.11+ with uvicorn          | LLM libraries, data processing advantage  | Node.js (less LLM ecosystem)                     |
+| **Package Manager**     | uv                                 | Fast, reliable Python package management  | pip (slower), poetry (complex)                   |
+| **Database**            | PostgreSQL                         | Relational model fits artifact versioning | MongoDB (no joins), Firebase (limited queries)   |
+| **ORM/Migrations**      | SQLAlchemy + Alembic               | Declarative ORM, version control for DB   | Prisma (Node.js only), Django ORM (monolithic)   |
+| **File Storage**        | Supabase Storage                   | Managed, S3-compatible, easy integration  | AWS S3 (more setup), GCS (multi-cloud)           |
+| **Data Isolation**      | PostgreSQL RLS                     | Secure, standards-based, auditable        | Application-layer filtering (error-prone)        |
+| **Testing**             | pytest                             | Powerful fixtures, extensive plugins      | unittest (verbose), nose (deprecated)            |
+| **Linting**             | ruff                               | Fast, comprehensive Python linting        | flake8 (slower), pylint (complex)                |
+| **Observability**       | Langfuse                           | LLM-specific tracing, agent debugging     | Generic APM (missing LLM context)                |
+| **Monitoring**          | LGTM Stack (Loki/Grafana/Tempo)    | Open-source, unified observability        | Datadog (expensive), New Relic (vendor lock)     |
+| **Email Service**       | Resend                             | Modern email API, easy integration        | SendGrid (legacy), Mailgun (feature creep)       |
+| **User App Hosting**    | Azure App Service                  | Managed container, auto-scaling           | Heroku (expensive), EC2 (manual ops)             |
+| **Container Orch.**     | AKS (Azure Kubernetes Service)     | Managed K8s, Azure integration            | ECS (AWS-only), Docker Swarm (EOL)               |
+| **Infra as Code**       | Terraform                          | Multi-cloud, version-controlled infra     | CloudFormation (AWS-only), ARM (Azure-only)      |
+| **Message Broker**      | RabbitMQ                           | Reliable queue, cost-effective            | Kafka (complex), AWS SQS (vendor lock)           |
+| **Evidence Tiers**      | 5-level (E0-E4)                    | Fine-grained confidence tracking          | 3-level (insufficient)                           |
+| **Gate Thresholds**     | VRC 76%, VCD 75%, DSP 80%, MDP 85% | Validated through product research        | Higher (too permissive), Lower (blocks progress) |
 
 ---
 
@@ -493,6 +505,14 @@ CREATE POLICY artifact_isolation ON artifacts
 All architectural decisions align with Constitution v1.0.0 principles and are evidence-based (E2+ for design patterns). Phase 0 research validates:
 
 ✅ LangGraph selected for 26-agent orchestration  
+✅ FastAPI + Python 3.11 backend with uvicorn for high-performance async execution  
+✅ SQLAlchemy + Alembic for type-safe ORM and database version control  
+✅ ruff for fast Python linting and pytest for comprehensive testing  
+✅ Langfuse for LLM-specific observability and agent tracing  
+✅ LGTM stack (Loki/Grafana/Tempo) for unified open-source monitoring  
+✅ Azure App Service + AKS for managed container orchestration with Terraform IaC  
+✅ RabbitMQ for reliable message brokering and async task processing  
+✅ Resend for modern email service integration  
 ✅ Evidence tier algorithm designed with 5-level classification  
 ✅ Cascade impact analyzer strategy defined  
 ✅ LLM fallback strategy for resilience  

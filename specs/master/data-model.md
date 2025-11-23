@@ -53,14 +53,38 @@
 │  │  │  ├─ timestamp                                          │
 │  │  │  └─ cohort (user segment)                             │
 │  │  │                                                         │
-│  │  └─ DivergenceReports (1:M)                               │
+│  │  ├─ DivergenceReports (1:M)                               │
+│  │  │  ├─ id (PK)                                           │
+│  │  │  ├─ project_id (FK)                                   │
+│  │  │  ├─ divergence_type (persona/feature/pricing)          │
+│  │  │  ├─ assumed_value, actual_value                        │
+│  │  │  ├─ confidence_score, classified_as (MAJOR/MINOR)      │
+│  │  │  └─ created_at                                         │
+│  │  │                                                         │
+│  │  └─ AgentExecutions (1:M)                                 │
 │  │     ├─ id (PK)                                           │
 │  │     ├─ project_id (FK)                                   │
-│  │     ├─ divergence_type (persona/feature/pricing)          │
-│  │     ├─ assumed_value, actual_value                        │
-│  │     ├─ confidence_score, classified_as (MAJOR/MINOR)      │
-│  │     └─ created_at                                         │
+│  │     ├─ agent_id (FK to Agent master)                     │
+│  │     ├─ phase (DISCOVER/DEFINE/DESIGN/DEVELOP/DEPLOY)    │
+│  │     ├─ status (QUEUED/RUNNING/SUCCESS/FAILED/RETRIED)   │
+│  │     ├─ started_at, completed_at                          │
+│  │     ├─ tokens_used, cost_usd, model_used                 │
+│  │     ├─ output_artifact_id (FK to Artifact)              │
+│  │     ├─ error_message, retry_count                        │
+│  │     └─ created_at                                        │
 │  │                                                             │
+├─ Agents (Master Catalog - 26 agents)                          │
+│  ├─ id (PK)                                                 │
+│  ├─ name (Problem Validation, Code Generation, etc.)        │
+│  ├─ phase (DISCOVER, DEFINE, DESIGN, DEVELOP, DEPLOY)      │
+│  ├─ agent_type (VALIDATOR, ANALYZER, GENERATOR, ASSEMBLER) │
+│  ├─ description                                              │
+│  ├─ model_preference (gpt-4, claude-3-sonnet, etc.)        │
+│  ├─ avg_tokens_input, avg_tokens_output                    │
+│  ├─ cost_per_execution                                      │
+│  ├─ is_active (enabled/disabled)                            │
+│  └─ created_at, updated_at                                  │
+│                                                                 │
 │  ├─ AuditLogs (1:M)                                           │
 │  │  ├─ id (PK)                                              │
 │  │  ├─ workspace_id (FK)                                          │
@@ -161,6 +185,44 @@ model OrgMember {
 }
 
 // ============================================================================
+// AGENT MASTER CATALOG (26 Agents from Product Brief)
+// ============================================================================
+
+model Agent {
+  id                String      @id @default(cuid())
+  name              String      @unique @db.VarChar(100) // Problem Validation, Code Generation, etc.
+  phase             String      @db.VarChar(20)  // DISCOVER, DEFINE, DESIGN, DEVELOP, DEPLOY
+  agent_type        String      @db.VarChar(50)  // VALIDATOR, ANALYZER, GENERATOR, ASSEMBLER, SCANNER, OPTIMIZER
+  description       String?     @db.Text
+
+  // Model Configuration
+  model_preference  String      @db.VarChar(50)  // gpt-4, claude-3-sonnet, gpt-4-turbo, claude-3-opus
+  temperature       Decimal     @default(0.7) @db.Decimal(3, 2) // 0.0-1.0
+  max_tokens        Int         @default(2000)
+
+  // Cost & Performance Baseline
+  avg_tokens_input  Int         @default(1000)   // Historical average
+  avg_tokens_output Int         @default(500)    // Historical average
+  cost_per_execution Decimal    @db.Decimal(6, 4) // USD cost
+
+  // Status
+  is_active         Boolean     @default(true)
+  version           Int         @default(1)      // Agent version tracking
+
+  // Timestamps
+  created_at        DateTime    @default(now())
+  updated_at        DateTime    @updatedAt
+
+  // Relations
+  executions        AgentExecution[]
+
+  @@unique([name, phase])
+  @@index([phase])
+  @@index([is_active])
+  @@map("agents")
+}
+
+// ============================================================================
 // PROJECTS & ARTIFACTS
 // ============================================================================
 
@@ -193,6 +255,7 @@ model Project {
   gateDecisions     GateDecision[]
   telemetry         Telemetry[]
   divergenceReports DivergenceReport[]
+  agentExecutions   AgentExecution[]
   costTracking      CostTracking[]
 
   @@index([workspace_id])
@@ -226,6 +289,7 @@ model Artifact {
   // Relations
   project           Project @relation(fields: [project_id], references: [id], onDelete: Cascade)
   tags              ArtifactTag[]
+  generatedByAgents AgentExecution[]
 
   @@unique([project_id, type, version])
   @@index([project_id])
@@ -346,6 +410,60 @@ model DivergenceReport {
   @@index([classification])
   @@index([status])
   @@map("divergence_reports")
+}
+
+// ============================================================================
+// AGENT ORCHESTRATION & EXECUTION TRACKING
+// ============================================================================
+
+model AgentExecution {
+  id                String      @id @default(cuid())
+  project_id        String
+  agent_id          String      // FK to Agent master
+  phase             String      @db.VarChar(20)  // DISCOVER, DEFINE, DESIGN, DEVELOP, DEPLOY
+
+  // Execution Status
+  status            String      @default("QUEUED") // QUEUED, RUNNING, SUCCESS, FAILED, RETRIED, SKIPPED
+  started_at        DateTime?
+  completed_at      DateTime?
+  duration_seconds  Int?        // Execution time
+
+  // Input & Output
+  input_data        Json?       // Input parameters passed to agent
+  output_artifact_id String?    // Links to generated Artifact
+  error_message     String?     @db.Text // If FAILED, why?
+  retry_count       Int         @default(0) // Number of retries
+  max_retries       Int         @default(3)
+
+  // Resource Usage & Cost
+  tokens_used_input  Int?       // Input tokens to LLM
+  tokens_used_output Int?       // Output tokens from LLM
+  total_tokens      Int?        // input + output
+  model_used        String      @db.VarChar(50)  // gpt-4, claude-3-sonnet, etc.
+  cost_usd          Decimal     @db.Decimal(10, 4) // USD cost for this execution
+  cost_tokens       Int?        // Token count for cost calculation
+
+  // Quality Metrics
+  confidence_score  Int?        // 0-100, how confident is the output?
+  quality_checks    Json?       // {check_name: pass/fail/warning}
+  evidence_tier     String      @default("E0") // E0-E4: evidence classification
+
+  // Timestamps
+  created_at        DateTime    @default(now())
+  updated_at        DateTime    @updatedAt
+
+  // Relations
+  project           Project @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  agent             Agent @relation(fields: [agent_id], references: [id], onDelete: Restrict)
+  outputArtifact    Artifact? @relation(fields: [output_artifact_id], references: [id], onDelete: SetNull)
+
+  @@index([project_id])
+  @@index([agent_id])
+  @@index([phase])
+  @@index([status])
+  @@index([started_at])
+  @@index([completed_at])
+  @@map("agent_executions")
 }
 
 // ============================================================================
@@ -708,18 +826,21 @@ export class OrgContextMiddleware implements NestMiddleware {
 
 ### Foreign Key Relationships
 
-| From             | To        | Constraint        | Behavior           |
-| ---------------- | --------- | ----------------- | ------------------ |
-| Project          | Workspace | workspace_id → id | CASCADE on delete  |
-| Artifact         | Project   | project_id → id   | CASCADE on delete  |
-| GateDecision     | Project   | project_id → id   | CASCADE on delete  |
-| GateDecision     | User      | decided_by → id   | SET NULL on delete |
-| Telemetry        | Project   | project_id → id   | CASCADE on delete  |
-| DivergenceReport | Project   | project_id → id   | CASCADE on delete  |
-| AuditLog         | Workspace | workspace_id → id | CASCADE on delete  |
-| AuditLog         | User      | actor_id → id     | SET NULL on delete |
-| CostTracking     | Workspace | workspace_id → id | CASCADE on delete  |
-| CostTracking     | Project   | project_id → id   | SET NULL on delete |
+| From             | To        | Constraint              | Behavior               |
+| ---------------- | --------- | ----------------------- | ---------------------- |
+| Project          | Workspace | workspace_id → id       | CASCADE on delete      |
+| Artifact         | Project   | project_id → id         | CASCADE on delete      |
+| GateDecision     | Project   | project_id → id         | CASCADE on delete      |
+| GateDecision     | User      | decided_by → id         | SET NULL on delete     |
+| Telemetry        | Project   | project_id → id         | CASCADE on delete      |
+| DivergenceReport | Project   | project_id → id         | CASCADE on delete      |
+| AgentExecution   | Project   | project_id → id         | CASCADE on delete      |
+| AgentExecution   | Agent     | agent_id → id           | RESTRICT (master data) |
+| AgentExecution   | Artifact  | output_artifact_id → id | SET NULL on delete     |
+| AuditLog         | Workspace | workspace_id → id       | CASCADE on delete      |
+| AuditLog         | User      | actor_id → id           | SET NULL on delete     |
+| CostTracking     | Workspace | workspace_id → id       | CASCADE on delete      |
+| CostTracking     | Project   | project_id → id         | SET NULL on delete     |
 
 ### Unique Constraints
 
@@ -746,6 +867,10 @@ CREATE INDEX idx_audit_logs_timestamp ON audit_logs(org_id, timestamp DESC);
 CREATE INDEX idx_cost_tracking_org_phase ON cost_tracking(org_id, phase);
 CREATE INDEX idx_gate_decisions_venture ON gate_decisions(venture_id, gate_type);
 CREATE INDEX idx_divergence_reports_venture ON divergence_reports(venture_id, classification);
+CREATE INDEX idx_agent_executions_project_phase ON agent_executions(project_id, phase);
+CREATE INDEX idx_agent_executions_project_status ON agent_executions(project_id, status);
+CREATE INDEX idx_agent_executions_agent_name ON agent_executions(project_id, agent_name);
+CREATE INDEX idx_agent_executions_timestamp ON agent_executions(project_id, started_at DESC);
 ```
 
 ---
@@ -767,6 +892,26 @@ class VentureValidation {
   - dsp_score: 0-100 or null (only if phase ≥ DESIGN)
   - mdp_score: 0-100 or null (only if phase ≥ DEVELOP)
   - launched_at: timestamp or null (only if phase = DEPLOY)
+}
+```
+
+### AgentExecution Validation
+
+```typescript
+class AgentExecutionValidation {
+  - phase: required, one of [DISCOVER, DEFINE, DESIGN, DEVELOP, DEPLOY]
+  - agent_name: required, one of the 26 agents from product brief
+  - status: one of [QUEUED, RUNNING, SUCCESS, FAILED, RETRIED, SKIPPED]
+  - started_at: timestamp (set when status changes to RUNNING)
+  - completed_at: timestamp (set when status changes to SUCCESS/FAILED/SKIPPED)
+  - tokens_used_input: ≥0 (null if not applicable)
+  - tokens_used_output: ≥0 (null if not applicable)
+  - model_used: one of [gpt-4, gpt-4-turbo, claude-3-sonnet, claude-3-opus]
+  - cost_usd: ≥0 (calculated from tokens × model pricing)
+  - confidence_score: 0-100 or null
+  - evidence_tier: one of [E0, E1, E2, E3, E4]
+  - retry_count: 0-max_retries
+  - output_artifact_id: null OR valid artifact_id in same project
 }
 ```
 
@@ -797,6 +942,55 @@ class GateDecisionValidation {
 ### Initial Seeding (Test Data)
 
 ```sql
+-- ============================================================================
+-- Seed 26 Agent Master Catalog (from Product Brief)
+-- ============================================================================
+
+-- DISCOVER Phase (4 Agents)
+INSERT INTO agents (name, phase, agent_type, description, model_preference, avg_tokens_input, avg_tokens_output, cost_per_execution) VALUES
+('Problem Validation', 'DISCOVER', 'VALIDATOR', 'Validate problem-solution fit and market opportunity', 'gpt-4', 800, 400, 0.03),
+('Competitive Analysis', 'DISCOVER', 'ANALYZER', 'Map competitive landscape and identify positioning opportunities', 'gpt-4', 900, 600, 0.04),
+('Opportunity Scoring', 'DISCOVER', 'ANALYZER', 'Assess market opportunity size and timing', 'gpt-4', 700, 300, 0.02),
+('VRC Assessment', 'DISCOVER', 'ASSEMBLER', 'Comprehensive venture readiness evaluation across 20 indicators', 'gpt-4', 1200, 800, 0.05);
+
+-- DEFINE Phase (5 Agents)
+INSERT INTO agents (name, phase, agent_type, description, model_preference, avg_tokens_input, avg_tokens_output, cost_per_execution) VALUES
+('Market Research', 'DEFINE', 'ANALYZER', 'Comprehensive competitive analysis and market intelligence', 'gpt-4', 1000, 700, 0.04),
+('Persona Building', 'DEFINE', 'GENERATOR', 'Develop detailed user personas and customer journey maps', 'gpt-4-turbo', 800, 600, 0.03),
+('Requirements Specification', 'DEFINE', 'GENERATOR', 'Generate comprehensive product requirements and feature specifications', 'gpt-4', 1100, 900, 0.05),
+('Feasibility Analysis', 'DEFINE', 'ANALYZER', 'Assess technical, operational, and financial feasibility', 'gpt-4', 900, 500, 0.03),
+('VCD Assembly', 'DEFINE', 'ASSEMBLER', 'Synthesize all Define phase outputs into Venture Concept Document', 'gpt-4', 1300, 1000, 0.06);
+
+-- DESIGN Phase (6 Agents)
+INSERT INTO agents (name, phase, agent_type, description, model_preference, avg_tokens_input, avg_tokens_output, cost_per_execution) VALUES
+('UX/UI Design', 'DESIGN', 'GENERATOR', 'Create intuitive user interface and experience design', 'gpt-4-turbo', 950, 700, 0.04),
+('Journey Mapping', 'DESIGN', 'GENERATOR', 'Design optimal user journeys and interaction flows', 'gpt-4', 850, 550, 0.03),
+('Branding', 'DESIGN', 'GENERATOR', 'Create brand identity, design system, and visual guidelines', 'gpt-4', 800, 600, 0.03),
+('Architecture', 'DESIGN', 'GENERATOR', 'Design system architecture and technology recommendations', 'gpt-4', 1100, 800, 0.05),
+('Prototyping', 'DESIGN', 'GENERATOR', 'Generate clickable prototypes from wireframes', 'gpt-4-turbo', 900, 700, 0.04),
+('DSP Assembly', 'DESIGN', 'ASSEMBLER', 'Calculate design specification progress and gate decision', 'gpt-4', 1200, 900, 0.06);
+
+-- DEVELOP Phase (7 Agents)
+INSERT INTO agents (name, phase, agent_type, description, model_preference, avg_tokens_input, avg_tokens_output, cost_per_execution) VALUES
+('Code Generation', 'DEVELOP', 'GENERATOR', 'Generate production-ready backend and frontend code', 'gpt-4', 1500, 1200, 0.08),
+('Testing', 'DEVELOP', 'GENERATOR', 'Generate unit, integration, and E2E tests with TDD discipline', 'gpt-4', 1300, 1000, 0.07),
+('Documentation', 'DEVELOP', 'GENERATOR', 'Generate API docs, setup guides, architecture decision records', 'gpt-4', 1000, 800, 0.05),
+('Security Scanning', 'DEVELOP', 'SCANNER', 'Run SAST, dependency checks, and security validation', 'gpt-4', 800, 400, 0.02),
+('Quality Gates', 'DEVELOP', 'VALIDATOR', 'Validate code coverage, security score, and completeness', 'gpt-4', 900, 500, 0.03),
+('Performance Optimization', 'DEVELOP', 'OPTIMIZER', 'Optimize code performance, database queries, and resource usage', 'gpt-4-turbo', 1100, 700, 0.05),
+('MDP Assembly', 'DEVELOP', 'ASSEMBLER', 'Assemble minimum deployable product and validate readiness', 'gpt-4', 1400, 1100, 0.08);
+
+-- DEPLOY Phase (4 Agents)
+INSERT INTO agents (name, phase, agent_type, description, model_preference, avg_tokens_input, avg_tokens_output, cost_per_execution) VALUES
+('Infrastructure Provisioning', 'DEPLOY', 'GENERATOR', 'Provision infrastructure on Vercel, Supabase, and AWS', 'gpt-4', 1000, 600, 0.04),
+('Monitoring Setup', 'DEPLOY', 'GENERATOR', 'Configure telemetry, dashboards, and monitoring alerts', 'gpt-4', 900, 500, 0.03),
+('Optimization', 'DEPLOY', 'OPTIMIZER', 'Optimize deployed application performance and costs', 'gpt-4', 850, 550, 0.03),
+('Launch Coordination', 'DEPLOY', 'ASSEMBLER', 'Coordinate go-to-market, landing page, and launch activities', 'gpt-4', 950, 700, 0.04);
+
+-- ============================================================================
+-- Seed Test Workspace, User, and Project
+-- ============================================================================
+
 -- Create test workspace
 INSERT INTO workspaces (id, name, subscription_tier)
 VALUES ('workspace_test_1', 'Acme Corp', 'PRO');

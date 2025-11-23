@@ -7,14 +7,14 @@ servers:
   - url: https://api.augentislabs.com
 
 paths:
-  /api/ventures/{ventureId}/artifacts/upload:
+  /api/projects/{projectId}/artifacts/upload:
     post:
       summary: Upload market research document (PDF, transcript, etc.)
       operationId: uploadArtifact
       tags:
         - Define Phase
       parameters:
-        - name: ventureId
+        - name: projectId
           in: path
           required: true
           schema:
@@ -53,14 +53,14 @@ paths:
                     type: string
                     format: date-time
 
-  /api/ventures/{ventureId}/define:
+  /api/projects/{projectId}/define:
     post:
       summary: Start Define phase (process uploaded research)
       operationId: startDefine
       tags:
         - Define Phase
       parameters:
-        - name: ventureId
+        - name: projectId
           in: path
           required: true
           schema:
@@ -87,7 +87,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  venture_id:
+                  project_id:
                     type: string
                   phase:
                     type: string
@@ -96,14 +96,14 @@ paths:
                     type: string
                     enum: [IN_PROGRESS]
 
-  /api/ventures/{ventureId}/define/personas:
+  /api/projects/{projectId}/define/personas:
     get:
       summary: Get generated customer personas
       operationId: getPersonas
       tags:
         - Define Phase
       parameters:
-        - name: ventureId
+        - name: projectId
           in: path
           required: true
           schema:
@@ -124,14 +124,14 @@ paths:
                     type: string
                     format: date-time
 
-  /api/ventures/{ventureId}/define/prd:
+  /api/projects/{projectId}/define/prd:
     get:
       summary: Get generated Product Requirements Document
       operationId: getPRD
       tags:
         - Define Phase
       parameters:
-        - name: ventureId
+        - name: projectId
           in: path
           required: true
           schema:
@@ -149,14 +149,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/PRD'
 
-  /api/ventures/{ventureId}/vcd:
+  /api/projects/{projectId}/vcd:
     get:
       summary: Get VCD (Validation & Clarity Degree) score
       operationId: getVCDScore
       tags:
         - Quality Gates
       parameters:
-        - name: ventureId
+        - name: projectId
           in: path
           required: true
           schema:
@@ -175,7 +175,7 @@ paths:
       tags:
         - Quality Gates
       parameters:
-        - name: ventureId
+        - name: projectId
           in: path
           required: true
           schema:
@@ -203,14 +203,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/GateDecision'
 
-  /api/ventures/{ventureId}/define/export:
+  /api/projects/{projectId}/define/export:
     get:
       summary: Export Define phase artifacts as ZIP
       operationId: exportDefineArtifacts
       tags:
         - Define Phase
       parameters:
-        - name: ventureId
+        - name: projectId
           in: path
           required: true
           schema:
@@ -288,7 +288,7 @@ components:
       properties:
         version:
           type: integer
-        venture_id:
+        project_id:
           type: string
         executive_summary:
           type: string
@@ -369,7 +369,7 @@ components:
       properties:
         id:
           type: string
-        venture_id:
+        project_id:
           type: string
         gate_type:
           type: string
@@ -391,3 +391,4 @@ components:
 
 security:
   - bearerAuth: []
+

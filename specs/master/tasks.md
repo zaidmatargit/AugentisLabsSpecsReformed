@@ -30,13 +30,13 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 
 **A task is considered "DONE" when ALL of the following criteria are met:**
 
-- [ ] **Code Quality**: Code written follows project style guide (ESLint/Prettier passes)
-- [ ] **Testing**: Unit tests written with ≥80% code coverage for that module
+- [ ] **Code Quality**: Code written follows project style guide (ruff formatting passes)
+- [ ] **Testing**: Unit tests written with ≥80% code coverage for that module (pytest)
 - [ ] **Review**: Code review completed and approved by at least 1 team member
-- [ ] **Linting**: All linting and formatting checks passing (ESLint, Prettier)
-- [ ] **Debugging**: No console errors or warnings in browser/server logs
+- [ ] **Linting**: All linting and formatting checks passing (ruff lint, ruff format)
+- [ ] **Debugging**: No errors or warnings in server logs
 - [ ] **Git Hygiene**: Commit message follows conventional commits (feat:, fix:, test:, docs:, etc.)
-- [ ] **Documentation**: Related code documented with JSDoc comments and README updated if needed
+- [ ] **Documentation**: Related code documented with docstrings and README updated if needed
 - [ ] **API Compatibility**: No breaking changes to existing API endpoints (or documented + approved if unavoidable)
 - [ ] **Performance**: Performance implications reviewed (no significant regressions)
 - [ ] **Security**: Security review completed for auth/data-handling tasks
@@ -57,18 +57,18 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 - ✅ Repository with branching strategy, linting, testing framework
 - ✅ Docker Compose local dev environment running
 - ✅ GitHub Actions CI/CD pipeline passing
-- ✅ Vercel + Supabase provisioned and connected
+- ✅ Supabase provisioned and connected, Azure App Service configured
 
 **Sprint 1-2 Acceptance Criteria** (All must pass to consider sprint complete):
 
 - [ ] Both `backend/` and `frontend/` initialized with correct project structure
 - [ ] Developer can clone repo and run `make dev` without errors
 - [ ] All GitHub Actions workflows running on PR and main branch
-- [ ] ESLint/Prettier enforced and passing on all code
-- [ ] Jest tests configured with 80% coverage requirement
-- [ ] Docker Compose starts all services (PostgreSQL, Redis, pgAdmin) with health checks
+- [ ] ruff lint/format checks enforced and passing on all code
+- [ ] pytest configured with 80% coverage requirement
+- [ ] Docker Compose starts all services (PostgreSQL, RabbitMQ, pgAdmin) with health checks
 - [ ] Supabase project provisioned with connection string working
-- [ ] Vercel project linked and deployment workflow ready
+- [ ] Azure App Service and AKS cluster provisioned with Terraform
 - [ ] All documentation (README, CONTRIBUTING, DEVELOPMENT) complete
 - [ ] Team can onboard new developer in <30 minutes
 - [ ] Zero breaking changes to public APIs
@@ -81,46 +81,46 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 
 **Acceptance Criteria**:
 
-- [ ] Backend project created with NestJS 10.x, TypeScript 5.x, configured in `backend/` directory
+- [ ] Backend project created with FastAPI, Python 3.11+, configured in `backend/` directory
 - [ ] Frontend project created with Next.js 14, TypeScript, Tailwind, configured in `frontend/` directory
-- [ ] ESLint and Prettier configured on both and enforcing no errors on commit
-- [ ] Jest configured with 80% coverage threshold enforced on CI/CD
-- [ ] Both projects run locally with `npm run dev` without errors
-- [ ] `.env.example` contains all required environment variables (DATABASE*URL, SUPABASE*\_, OPENAI\_\_, AWS\_\*)
-- [ ] `.gitignore` properly configured to exclude node_modules, build, env files
-- [ ] No unused dependencies in package.json
-- [ ] NPM scripts working: `npm run dev`, `npm run build`, `npm run test`, `npm run lint`
+- [ ] ruff configured for linting and black for formatting, enforcing no errors on commit
+- [ ] pytest configured with 80% coverage threshold enforced on CI/CD
+- [ ] Both projects run locally with `make dev` (backend: uvicorn, frontend: npm) without errors
+- [ ] `.env.example` contains all required environment variables (DATABASE*URL, SUPABASE*\_, OPENAI\_\_, LANGFUSE*\*, RABBITMQ*\*, etc.)
+- [ ] `.gitignore` properly configured to exclude **pycache**, node_modules, build, env files
+- [ ] No unused dependencies in backend pyproject.toml or frontend package.json
+- [ ] Scripts working: `uv sync`, `make dev`, `uv run pytest`, `uv run ruff check`
 
 **Tasks**:
 
-- [ ] T001 [S1] [US1] [Backend Dev] Initialize NestJS backend with TypeScript 5.x in `backend/` directory
+- [ ] T001 [S1] [US1] [Backend Dev] Initialize FastAPI backend with Python 3.11, uvicorn in `backend/` directory
 - [ ] T002 [P] [S1] [US1] [Frontend Dev] Initialize Next.js 14 frontend with TypeScript and Tailwind in `frontend/` directory
-- [ ] T003 [P] [S1] [US1] [Backend Dev] Configure `backend/.eslintrc.json`, `backend/.prettierrc` for linting
+- [ ] T003 [P] [S1] [US1] [Backend Dev] Configure `backend/pyproject.toml` with ruff, black, pytest, FastAPI dependencies
 - [ ] T004 [P] [S1] [US1] [Frontend Dev] Configure `frontend/.eslintrc.json`, `frontend/.prettierrc` for linting
-- [ ] T005 [P] [S1] [US2] [Testing] Configure `backend/jest.config.js` with 80% coverage threshold
+- [ ] T005 [P] [S1] [US2] [Testing] Configure `backend/pytest.ini` with 80% coverage threshold
 - [ ] T006 [P] [S1] [US2] [Testing] Configure `frontend/jest.config.js` and Playwright setup for E2E
-- [ ] T007 [S1] [US2] [DevOps] Create `.env.example` with all required variables
-- [ ] T008 [P] [S1] [US2] [DevOps] Create `.gitignore` excluding node_modules, build, env files
+- [ ] T007 [S1] [US2] [DevOps] Create `.env.example` with all required variables (Langfuse, RabbitMQ, etc.)
+- [ ] T008 [P] [S1] [US2] [DevOps] Create `.gitignore` excluding **pycache**, node_modules, build, env files
 
 #### US Setup 1.2: Docker & Local Development Environment
 
 **Acceptance Criteria**:
 
-- [ ] `docker-compose.yml` defines PostgreSQL 15, Redis, pgAdmin with health checks
+- [ ] `docker-compose.yml` defines PostgreSQL 15, RabbitMQ, pgAdmin with health checks
 - [ ] All services have readiness probes (health checks) configured
 - [ ] `docker-compose up` starts all services without errors
 - [ ] Database initializes automatically with seed data on first run
+- [ ] RabbitMQ Management UI accessible at localhost:15672
 - [ ] pgAdmin accessible at localhost:5050 with credentials
-- [ ] Redis CLI accessible for debugging
 - [ ] `.override.yml` allows local dev customizations without modifying main file
 - [ ] `Makefile` provides: `make dev`, `make docker-up`, `make docker-down`, `make db-seed`, `make db-reset`
 - [ ] Developer can destroy and recreate database in <1 minute
 
 **Tasks**:
 
-- [ ] T009 [S1] [US3] [DevOps] Create root `docker-compose.yml` with PostgreSQL 15, Redis, pgAdmin, health checks
+- [ ] T009 [S1] [US3] [DevOps] Create root `docker-compose.yml` with PostgreSQL 15, RabbitMQ, pgAdmin, health checks
 - [ ] T010 [P] [S1] [US3] [DevOps] Create `backend/docker-compose.override.yml` for local dev overrides
-- [ ] T011 [P] [S1] [US3] [Backend Dev] Create database initialization script in `backend/prisma/init.sql`
+- [ ] T011 [P] [S1] [US3] [Backend Dev] Create database initialization script in `backend/alembic/versions/init.sql`
 - [ ] T012 [P] [S1] [US3] [DevOps] Create `Makefile` with: `make dev`, `make docker-up`, `make db-seed`
 
 #### US Setup 1.3: CI/CD Pipeline Setup
@@ -128,7 +128,7 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 **Acceptance Criteria**:
 
 - [ ] GitHub Actions workflow runs on every PR to `main` branch
-- [ ] Backend CI validates: linting passes, unit tests pass, coverage ≥80%
+- [ ] Backend CI validates: ruff checks pass, pytest passes, coverage ≥80%
 - [ ] Frontend CI validates: linting passes, Lighthouse audit runs, E2E tests pass
 - [ ] Branch protection enforced: require CI pass + 1 approval before merge
 - [ ] Dependabot configured for automatic dependency updates
@@ -139,7 +139,7 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 
 **Tasks**:
 
-- [ ] T013 [S1] [US4] [DevOps] Create `.github/workflows/backend-ci.yml` for backend linting + unit tests
+- [ ] T013 [S1] [US4] [DevOps] Create `.github/workflows/backend-ci.yml` for backend ruff check + pytest
 - [ ] T014 [P] [S1] [US4] [DevOps] Create `.github/workflows/frontend-ci.yml` for frontend linting + Lighthouse audit
 - [ ] T015 [P] [S1] [US4] [DevOps] Setup GitHub branch protection: require CI pass + 1 approval
 - [ ] T016 [P] [S1] [US4] [DevOps] Create `.github/dependabot.yml` for dependency updates
@@ -184,22 +184,22 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 
 **Acceptance Criteria**:
 
-- [ ] `backend/prisma/schema.prisma` contains all 11 entities from data-model.md
-- [ ] Prisma migrations created and tested with zero data loss
+- [ ] `backend/pyproject.toml` includes SQLAlchemy, Alembic, psycopg2 dependencies
+- [ ] Alembic migrations created and tested with zero data loss
 - [ ] PostgreSQL RLS policies created for multi-tenant isolation (9 policies from data-model.md)
 - [ ] Integration test verifies workspace A cannot read workspace B's data
-- [ ] NestJS guard enforces multi-tenant context on every protected endpoint
-- [ ] Interceptor sets workspace_id on all database queries
+- [ ] FastAPI dependency injection enforces multi-tenant context on every protected endpoint
+- [ ] SQLAlchemy interceptor sets workspace_id on all database queries
 - [ ] Database indexes optimized for common queries (verified with EXPLAIN ANALYZE)
 - [ ] Schema version tracked and documented
 
 **Tasks**:
 
-- [ ] T020 [S2] [US2] [Backend Dev] Create `backend/src/entities/` directory with Prisma schema structure
-- [ ] T021 [S2] [US2] [Backend Dev] Implement Prisma schema in `backend/prisma/schema.prisma` with 11 entities
-- [ ] T022 [P] [S2] [US2] [Backend Dev] Create Prisma migrations in `backend/prisma/migrations/`
+- [ ] T020 [S2] [US2] [Backend Dev] Create `backend/app/models/` directory with SQLAlchemy model structure
+- [ ] T021 [S2] [US2] [Backend Dev] Implement SQLAlchemy models with 11 entities from data-model.md
+- [ ] T022 [P] [S2] [US2] [Backend Dev] Create Alembic migrations in `backend/alembic/versions/`
 - [ ] T023 [P] [S2] [US2] [Security] Create PostgreSQL RLS policies in `backend/prisma/migrations/001_rls_policies.sql`
-- [ ] T024 [P] [S2] [US2] [Security] Create NestJS multi-tenant guard in `backend/src/guards/multi-tenant.guard.ts`
+- [ ] T024 [P] [S2] [US2] [Security] Create FastAPI multi-tenant dependency in `backend/app/dependencies/multi_tenant.py`
 - [ ] T025 [P] [S2] [US2] [Backend Dev] Create workspace interceptor in `backend/src/interceptors/workspace.interceptor.ts`
 - [ ] T026 [P] [S2] [US2] [Testing] Create `backend/tests/integration/multi-tenant.integration.test.ts` verifying RLS
 
@@ -250,7 +250,7 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 - [ ] T038 [P] [S2] [US4] [Backend Dev] Create `backend/src/pipes/validation.pipe.ts` for request validation
 - [ ] T039 [P] [S2] [US4] [Backend Dev] Create `backend/src/modules/health/health.module.ts`
 - [ ] T040 [P] [S2] [US4] [Monitoring] Create `backend/src/modules/health/health.controller.ts` with database + LLM health checks
-- [ ] T041 [P] [S2] [US5] [Backend Dev] Create `backend/src/main.ts` NestJS bootstrap with all guards/filters
+- [ ] T041 [P] [S2] [US5] [Backend Dev] Create `backend/app/main.py` FastAPI bootstrap with all middleware and exception handlers
 - [ ] T042 [P] [S2] [US5] [Backend Dev] Create `backend/src/app.module.ts` root module
 
 #### US Foundation 2.4: Governance Basics & Seeding
@@ -739,7 +739,7 @@ This document organizes **237+ implementation tasks** into **8 two-week sprints*
 
 **Acceptance Criteria**:
 
-- [ ] Backend Generator creates NestJS scaffold with all endpoints from OpenAPI spec
+- [ ] Backend Generator creates FastAPI scaffold with all endpoints from OpenAPI spec
 - [ ] Frontend Generator creates Next.js components from wireframes
 - [ ] Test Generator creates FAILING tests first (RED phase of RED-Green-Refactor)
 - [ ] Schema Generator creates Prisma schema from ERD

@@ -7,14 +7,14 @@ servers:
   - url: https://api.augentislabs.com
 
 paths:
-  /api/ventures/{ventureId}/design:
+  /api/projects/{projectId}/design:
     post:
       summary: Start Design phase (generate wireframes and architecture)
       operationId: startDesign
       tags:
         - Design Phase
       parameters:
-        - name: ventureId
+        - name: projectId
           in: path
           required: true
           schema:
@@ -27,7 +27,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  venture_id:
+                  project_id:
                     type: string
                   phase:
                     type: string
@@ -36,14 +36,14 @@ paths:
                     type: string
                     enum: [IN_PROGRESS]
 
-  /api/ventures/{ventureId}/design/wireframes:
+  /api/projects/{projectId}/design/wireframes:
     get:
       summary: Get generated wireframes
       operationId: getWireframes
       tags:
         - Design Phase
       parameters:
-        - name: ventureId
+        - name: projectId
           in: path
           required: true
           schema:
@@ -75,14 +75,14 @@ paths:
                     items:
                       $ref: "#/components/schemas/Wireframe"
 
-  /api/ventures/{ventureId}/design/design-system:
+  /api/projects/{projectId}/design/design-system:
     get:
       summary: Get design system (components, colors, typography)
       operationId: getDesignSystem
       tags:
         - Design Phase
       parameters:
-        - name: ventureId
+        - name: projectId
           in: path
           required: true
           schema:
@@ -95,14 +95,14 @@ paths:
               schema:
                 $ref: "#/components/schemas/DesignSystem"
 
-  /api/ventures/{ventureId}/design/architecture:
+  /api/projects/{projectId}/design/architecture:
     get:
       summary: Get C4 architecture diagram and OpenAPI spec
       operationId: getArchitecture
       tags:
         - Design Phase
       parameters:
-        - name: ventureId
+        - name: projectId
           in: path
           required: true
           schema:
@@ -115,14 +115,14 @@ paths:
               schema:
                 $ref: "#/components/schemas/Architecture"
 
-  /api/ventures/{ventureId}/design/journey-maps:
+  /api/projects/{projectId}/design/journey-maps:
     get:
       summary: Get end-to-end user journey maps
       operationId: getJourneyMaps
       tags:
         - Design Phase
       parameters:
-        - name: ventureId
+        - name: projectId
           in: path
           required: true
           schema:
@@ -144,14 +144,14 @@ paths:
                     items:
                       $ref: "#/components/schemas/JourneyMap"
 
-  /api/ventures/{ventureId}/dsp:
+  /api/projects/{projectId}/dsp:
     get:
       summary: Get DSP (Design Specification Progress) score
       operationId: getDSPScore
       tags:
         - Quality Gates
       parameters:
-        - name: ventureId
+        - name: projectId
           in: path
           required: true
           schema:
@@ -170,7 +170,7 @@ paths:
       tags:
         - Quality Gates
       parameters:
-        - name: ventureId
+        - name: projectId
           in: path
           required: true
           schema:
@@ -198,14 +198,14 @@ paths:
               schema:
                 $ref: "#/components/schemas/GateDecision"
 
-  /api/ventures/{ventureId}/design/export:
+  /api/projects/{projectId}/design/export:
     get:
       summary: Export all design assets as ZIP
       operationId: exportDesignArtifacts
       tags:
         - Design Phase
       parameters:
-        - name: ventureId
+        - name: projectId
           in: path
           required: true
           schema:
@@ -423,7 +423,7 @@ components:
       properties:
         id:
           type: string
-        venture_id:
+        project_id:
           type: string
         gate_type:
           type: string
@@ -445,3 +445,4 @@ components:
 
 security:
   - bearerAuth: []
+

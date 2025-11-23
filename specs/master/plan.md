@@ -11,12 +11,20 @@ AugentisLabs is an AI-powered Software Factory that transforms startup ideas int
 
 ## Technical Context
 
-**Language/Version**: TypeScript 5.x, Node.js LTS (v20.x)  
-**Primary Dependencies**: NestJS 10.x (backend), Next.js 14.x (frontend), LangGraph (agent orchestration), Prisma (ORM), Supabase (managed PostgreSQL + Auth), Vercel (serverless hosting)  
-**Storage**: PostgreSQL 15.x (via Supabase), AWS S3 (artifact exports), Supabase Auth (user management)  
-**Testing**: Jest (unit tests), Supertest (API integration), Playwright (E2E), OpenAPI contract tests, TDD-first discipline (failing tests RED phase before GREEN implementation)  
-**Target Platform**: SaaS web application (multi-tenant cloud-native)
-**Project Type**: Web application (NestJS backend + Next.js frontend, separate services)  
+**Language/Version**: Python 3.11+, FastAPI, uvicorn  
+**Primary Dependencies**: FastAPI (async backend), Next.js 14.x (frontend), LangGraph (agent orchestration), SQLAlchemy + Alembic (ORM), Supabase (managed PostgreSQL + Auth), Azure App Service (container hosting)  
+**Storage**: PostgreSQL 15.x (via Supabase), Supabase Storage (artifact exports), Supabase Auth (user management)  
+**Package Manager**: uv (fast Python package management)  
+**Testing**: pytest (unit tests), pytest-asyncio (async testing), Playwright (E2E), OpenAPI contract tests, TDD-first discipline  
+**Linting/Formatting**: ruff (Python linting), black (code formatting)  
+**Agent Observability**: Langfuse (LLM tracing and debugging)  
+**Monitoring**: LGTM stack (Loki for logs, Grafana for dashboards, Tempo for traces)  
+**Message Broker**: RabbitMQ (async task processing)  
+**Email Service**: Resend (modern email API)  
+**Infra as Code**: Terraform (Azure resources)  
+**Container Orchestration**: AKS (Azure Kubernetes Service)  
+**Target Platform**: SaaS web application (multi-tenant cloud-native)  
+**Project Type**: Web application (FastAPI backend + Next.js frontend, separate services)  
 **Performance Goals**: API <300ms P95 latency, frontend <2s LCP, agent execution success rate ≥95%, <5K LLM tokens per project average  
 **Constraints**: Multi-tenant RLS data isolation, GDPR compliance (data at rest encryption), zero critical security vulnerabilities (SAST passed), evidence tier classification E2+ for all critical decisions  
 **Scale/Scope**: 1000+ concurrent users Month 12, 100+ projects in development pipeline, 26 specialized AI agents, 5D phases, 4 quality gates (VRC/VCD/DSP/MDP), 3 pricing tiers, 22-week development timeline
@@ -213,4 +221,3 @@ Constitution Check: All 6 principles verified ✅ - No violations requiring just
 | **Multi-Tenant RLS**        | High       | PostgreSQL RLS necessary for GDPR; app-layer filtering error-prone                |
 | **Evidence Tier Algorithm** | Medium     | 5-level classification (E0-E4) required for risk management                       |
 | **Cascade Impact Analyzer** | High       | Traceability graph essential for selective re-execution vs 3-4 week full redesign |
-
