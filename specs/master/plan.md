@@ -17,9 +17,9 @@ AugentisLabs is an AI-powered Software Factory that transforms startup ideas int
 **Testing**: Jest (unit tests), Supertest (API integration), Playwright (E2E), OpenAPI contract tests, TDD-first discipline (failing tests RED phase before GREEN implementation)  
 **Target Platform**: SaaS web application (multi-tenant cloud-native)
 **Project Type**: Web application (NestJS backend + Next.js frontend, separate services)  
-**Performance Goals**: API <300ms P95 latency, frontend <2s LCP, agent execution success rate ≥95%, <5K LLM tokens per venture average  
+**Performance Goals**: API <300ms P95 latency, frontend <2s LCP, agent execution success rate ≥95%, <5K LLM tokens per project average  
 **Constraints**: Multi-tenant RLS data isolation, GDPR compliance (data at rest encryption), zero critical security vulnerabilities (SAST passed), evidence tier classification E2+ for all critical decisions  
-**Scale/Scope**: 1000+ concurrent users Month 12, 100+ ventures in development pipeline, 26 specialized AI agents, 5D phases, 4 quality gates (VRC/VCD/DSP/MDP), 3 pricing tiers, 22-week development timeline
+**Scale/Scope**: 1000+ concurrent users Month 12, 100+ projects in development pipeline, 26 specialized AI agents, 5D phases, 4 quality gates (VRC/VCD/DSP/MDP), 3 pricing tiers, 22-week development timeline
 
 ## Constitution Check
 
@@ -103,7 +103,7 @@ augentislabs/
 │   │   │   └── auth.config.ts        # JWT + Supabase Auth
 │   │   ├── modules/                  # Feature modules
 │   │   │   ├── auth/                 # Multi-tenant authentication
-│   │   │   ├── ventures/             # Venture CRUD operations
+│   │   │   ├── projects/             # Project CRUD operations
 │   │   │   ├── agents/               # 26 AI agents orchestration
 │   │   │   │   ├── discover/         # 4 Discover phase agents
 │   │   │   │   ├── define/           # 5 Define phase agents
@@ -142,14 +142,14 @@ augentislabs/
 │   │   ├── dashboard/
 │   │   │   ├── layout.tsx            # Dashboard layout (sidebar nav)
 │   │   │   ├── page.tsx              # Dashboard home
-│   │   │   ├── ventures/
+│   │   │   ├── projects/
 │   │   │   │   ├── [id]/
 │   │   │   │   │   ├── discover/     # Discover phase UI
 │   │   │   │   │   ├── define/       # Define phase UI
 │   │   │   │   │   ├── design/       # Design phase UI
 │   │   │   │   │   ├── develop/      # Develop phase UI
 │   │   │   │   │   └── deploy/       # Deploy phase UI
-│   │   │   │   └── create/           # Venture creation
+│   │   │   │   └── create/           # Project creation
 │   │   │   ├── artifacts/            # Artifact viewer
 │   │   │   ├── gates/                # Quality gate dashboard
 │   │   │   ├── telemetry/            # Deploy dashboards
@@ -158,12 +158,12 @@ augentislabs/
 │   │   └── api/                      # Next.js API routes (proxy)
 │   ├── components/
 │   │   ├── common/                   # Reusable UI components
-│   │   ├── ventures/                 # Venture-specific components
+│   │   ├── projects/                 # Project-specific components
 │   │   ├── gates/                    # Gate decision UI
 │   │   ├── telemetry/                # Charts & visualizations
 │   │   └── forms/                    # Form components
 │   ├── hooks/
-│   │   ├── useVenture.ts
+│   │   ├── useProject.ts
 │   │   ├── useFetchArtifact.ts
 │   │   ├── useGateDecision.ts
 │   │   └── useTelemetry.ts
@@ -213,3 +213,4 @@ Constitution Check: All 6 principles verified ✅ - No violations requiring just
 | **Multi-Tenant RLS**        | High       | PostgreSQL RLS necessary for GDPR; app-layer filtering error-prone                |
 | **Evidence Tier Algorithm** | Medium     | 5-level classification (E0-E4) required for risk management                       |
 | **Cascade Impact Analyzer** | High       | Traceability graph essential for selective re-execution vs 3-4 week full redesign |
+

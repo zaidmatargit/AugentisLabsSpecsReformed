@@ -12,16 +12,16 @@
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                                                                 │
-│  Organization (org_id)                                          │
+│  Workspace (workspace_id)                                          │
 │  ├─ id (PK)                                                    │
 │  ├─ name                                                        │
 │  ├─ subscription_tier (BASIC/PRO/ENTERPRISE)                  │
 │  ├─ created_at                                                 │
-│  └─ users (1:M via org_members)                               │
+│  └─ users (1:M via workspace_members)                               │
 │                                                                 │
-│  ├─ Ventures (venture_id)                                      │
+│  ├─ Projects (project_id)                                      │
 │  │  ├─ id (PK)                                                │
-│  │  ├─ org_id (FK)                                            │
+│  │  ├─ workspace_id (FK)                                      │
 │  │  ├─ name, description                                      │
 │  │  ├─ phase (DISCOVER/DEFINE/DESIGN/DEVELOP/DEPLOY)         │
 │  │  ├─ vrc_score, vcd_score, dsp_score, mdp_score            │
@@ -29,7 +29,7 @@
 │  │  ├─ created_at, updated_at                                │
 │  │  └─ Artifacts (1:M)                                        │
 │  │     ├─ id (PK)                                            │
-│  │     ├─ venture_id (FK)                                    │
+│  │     ├─ project_id (FK)                                    │
 │  │     ├─ type (PRD/PERSONA/WIREFRAME/CODE/TESTS)            │
 │  │     ├─ version (v1, v2, v3...)                           │
 │  │     ├─ content (JSON), evidence_tier (E0-E4)              │
@@ -38,7 +38,7 @@
 │  │                                                             │
 │  │  ├─ GateDecisions (1:M)                                   │
 │  │  │  ├─ id (PK)                                           │
-│  │  │  ├─ venture_id (FK)                                   │
+│  │  │  ├─ project_id (FK)                                   │
 │  │  │  ├─ gate_type (VRC/VCD/DSP/MDP)                       │
 │  │  │  ├─ score, decision (PASS/CONDITIONAL/FAIL)           │
 │  │  │  ├─ decided_by (user_id), rationale                   │
@@ -47,7 +47,7 @@
 │  │  │                                                         │
 │  │  ├─ Telemetry (1:M)                                       │
 │  │  │  ├─ id (PK)                                           │
-│  │  │  ├─ venture_id (FK)                                   │
+│  │  │  ├─ project_id (FK)                                   │
 │  │  │  ├─ metric_name (feature_usage, retention, crash)     │
 │  │  │  ├─ metric_value, unit                                │
 │  │  │  ├─ timestamp                                          │
@@ -55,7 +55,7 @@
 │  │  │                                                         │
 │  │  └─ DivergenceReports (1:M)                               │
 │  │     ├─ id (PK)                                           │
-│  │     ├─ venture_id (FK)                                   │
+│  │     ├─ project_id (FK)                                   │
 │  │     ├─ divergence_type (persona/feature/pricing)          │
 │  │     ├─ assumed_value, actual_value                        │
 │  │     ├─ confidence_score, classified_as (MAJOR/MINOR)      │
@@ -63,7 +63,7 @@
 │  │                                                             │
 │  ├─ AuditLogs (1:M)                                           │
 │  │  ├─ id (PK)                                              │
-│  │  ├─ org_id (FK)                                          │
+│  │  ├─ workspace_id (FK)                                          │
 │  │  ├─ action, actor_id, resource_type, resource_id         │
 │  │  ├─ changes (JSON diff)                                  │
 │  │  ├─ timestamp                                            │
@@ -71,7 +71,7 @@
 │  │                                                             │
 │  └─ CostTracking (1:M)                                        │
 │     ├─ id (PK)                                              │
-│     ├─ venture_id (FK)                                      │
+│     ├─ project_id (FK)                                      │
 │     ├─ agent_name, phase, tokens_used                       │
 │     ├─ cost_usd, model_used (gpt-4/claude)                  │
 │     ├─ timestamp                                            │
@@ -83,7 +83,7 @@
 │  ├─ auth_provider (supabase, google, ...)                   │
 │  ├─ role (USER/ADMIN/CTO)                                   │
 │  ├─ created_at, last_login                                  │
-│  └─ org_members (1:M) - with role per org                   │
+│  └─ workspace_members (1:M) - with role per workspace                   │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -108,22 +108,22 @@ generator client {
 // AUTHENTICATION & MULTI-TENANCY
 // ============================================================================
 
-model Organization {
+model Workspace {
   id                String      @id @default(cuid())
   name              String      @db.VarChar(255)
   subscription_tier String      @default("BASIC") // BASIC, PRO, ENTERPRISE
-  max_ventures      Int         @default(10) // Tier limit
+  max_projects      Int         @default(10) // Tier limit
   monthly_token_budget Int     @default(100000) // LLM token budget
   created_at        DateTime    @default(now())
   updated_at        DateTime    @updatedAt
 
   // Relations
-  members           OrgMember[]
-  ventures          Venture[]
+  members           WorkspaceMember[]
+  projects          Project[]
   auditLogs         AuditLog[]
   costTracking      CostTracking[]
 
-  @@map("organizations")
+  @@map("workspaces")
 }
 
 model User {
@@ -137,7 +137,7 @@ model User {
   last_login        DateTime?
 
   // Relations
-  orgMemberships    OrgMember[]
+  workspaceMemberships WorkspaceMember[]
   gateDecisions     GateDecision[] @relation("DecidedBy")
   gateOverrides     GateDecision[] @relation("OverriddenBy")
   auditLogs         AuditLog[] @relation("ActorId")
@@ -147,26 +147,26 @@ model User {
 
 model OrgMember {
   id                String      @id @default(cuid())
-  org_id            String
+  workspace_id      String
   user_id           String
   role              String      @default("MEMBER") // OWNER, ADMIN, MEMBER, VIEWER
   joined_at         DateTime    @default(now())
 
   // Relations
-  organization      Organization @relation(fields: [org_id], references: [id], onDelete: Cascade)
+  workspace         Workspace @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
   user              User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
-  @@unique([org_id, user_id])
-  @@map("org_members")
+  @@unique([workspace_id, user_id])
+  @@map("workspace_members")
 }
 
 // ============================================================================
-// VENTURES & ARTIFACTS
+// PROJECTS & ARTIFACTS
 // ============================================================================
 
-model Venture {
+model Project {
   id                String      @id @default(cuid())
-  org_id            String
+  workspace_id      String
   name              String      @db.VarChar(255)
   description       String?     @db.Text
   phase             String      @default("DISCOVER") // DISCOVER, DEFINE, DESIGN, DEVELOP, DEPLOY
@@ -188,22 +188,22 @@ model Venture {
   launched_at       DateTime?   // When deployed to production
 
   // Relations
-  organization      Organization @relation(fields: [org_id], references: [id], onDelete: Cascade)
+  workspace         Workspace @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
   artifacts         Artifact[]
   gateDecisions     GateDecision[]
   telemetry         Telemetry[]
   divergenceReports DivergenceReport[]
   costTracking      CostTracking[]
 
-  @@index([org_id])
+  @@index([workspace_id])
   @@index([phase])
   @@index([status])
-  @@map("ventures")
+  @@map("projects")
 }
 
 model Artifact {
   id                String      @id @default(cuid())
-  venture_id        String
+  project_id        String
   type              String      @db.VarChar(50) // PRD, PERSONA, WIREFRAME, CODE, TESTS, DESIGN_SYSTEM, ARCHITECTURE, TELEMETRY_DASHBOARD
   version           Int         @default(1) // v1, v2, v3...
   title             String      @db.VarChar(255)
@@ -224,11 +224,11 @@ model Artifact {
   updated_at        DateTime    @updatedAt
 
   // Relations
-  venture           Venture @relation(fields: [venture_id], references: [id], onDelete: Cascade)
+  project           Project @relation(fields: [project_id], references: [id], onDelete: Cascade)
   tags              ArtifactTag[]
 
-  @@unique([venture_id, type, version])
-  @@index([venture_id])
+  @@unique([project_id, type, version])
+  @@index([project_id])
   @@index([type])
   @@index([evidence_tier])
   @@map("artifacts")
@@ -253,7 +253,7 @@ model ArtifactTag {
 
 model GateDecision {
   id                String      @id @default(cuid())
-  venture_id        String
+  project_id        String
   gate_type         String      @db.VarChar(10) // VRC, VCD, DSP, MDP
 
   // Score & Decision
@@ -279,12 +279,12 @@ model GateDecision {
   updated_at        DateTime    @updatedAt
 
   // Relations
-  venture           Venture @relation(fields: [venture_id], references: [id], onDelete: Cascade)
+  project           Project @relation(fields: [project_id], references: [id], onDelete: Cascade)
   decidedByUser     User @relation("DecidedBy", fields: [decided_by], references: [id])
   overriddenByUser  User? @relation("OverriddenBy", fields: [override_by], references: [id])
 
   @@unique([venture_id, gate_type])
-  @@index([venture_id])
+  @@index([project_id])
   @@index([gate_type])
   @@index([decision])
   @@map("gate_decisions")
@@ -296,7 +296,7 @@ model GateDecision {
 
 model Telemetry {
   id                String      @id @default(cuid())
-  venture_id        String
+  project_id        String
   metric_name       String      @db.VarChar(100) // feature_usage, retention_d1, crash_rate, api_latency_p95
   metric_value      Float       // Numeric value
   unit              String      @db.VarChar(50)  // %, ms, count, users, etc.
@@ -304,9 +304,9 @@ model Telemetry {
   timestamp         DateTime    @default(now())
 
   // Relations
-  venture           Venture @relation(fields: [venture_id], references: [id], onDelete: Cascade)
+  project           Project @relation(fields: [project_id], references: [id], onDelete: Cascade)
 
-  @@index([venture_id])
+  @@index([project_id])
   @@index([metric_name])
   @@index([timestamp])
   @@index([cohort])
@@ -315,7 +315,7 @@ model Telemetry {
 
 model DivergenceReport {
   id                String      @id @default(cuid())
-  venture_id        String
+  project_id        String
 
   // Divergence Detection
   divergence_type   String      @db.VarChar(50) // persona_attribute, feature_priority, pricing_strategy, market_change
@@ -340,9 +340,9 @@ model DivergenceReport {
   updated_at        DateTime    @updatedAt
 
   // Relations
-  venture           Venture @relation(fields: [venture_id], references: [id], onDelete: Cascade)
+  project           Project @relation(fields: [project_id], references: [id], onDelete: Cascade)
 
-  @@index([venture_id])
+  @@index([project_id])
   @@index([classification])
   @@index([status])
   @@map("divergence_reports")
@@ -373,7 +373,7 @@ model AuditLog {
   created_at        DateTime    @default(now())
 
   // Relations
-  organization      Organization @relation(fields: [org_id], references: [id], onDelete: Cascade)
+  workspace      Workspace @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
   actor             User @relation("ActorId", fields: [actor_id], references: [id])
 
   @@index([org_id])
@@ -390,7 +390,7 @@ model AuditLog {
 model CostTracking {
   id                String      @id @default(cuid())
   org_id            String
-  venture_id        String?     // null if org-level
+  project_id        String?     // null if org-level
 
   // LLM Usage
   agent_name        String      @db.VarChar(100) // Problem Validator, Persona Builder, etc.
@@ -409,11 +409,11 @@ model CostTracking {
   timestamp         DateTime    @default(now())
 
   // Relations
-  organization      Organization @relation(fields: [org_id], references: [id], onDelete: Cascade)
-  venture           Venture? @relation(fields: [venture_id], references: [id], onDelete: SetNull)
+  workspace      Workspace @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
+  project           Project? @relation(fields: [project_id], references: [id], onDelete: SetNull)
 
   @@index([org_id])
-  @@index([venture_id])
+  @@index([project_id])
   @@index([phase])
   @@index([timestamp])
   @@map("cost_tracking")
@@ -451,10 +451,10 @@ model FeatureFlag {
 -- Enable RLS on all tables
 -- ============================================================================
 
-ALTER TABLE organizations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE workspaces ENABLE ROW LEVEL SECURITY;
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
-ALTER TABLE org_members ENABLE ROW LEVEL SECURITY;
-ALTER TABLE ventures ENABLE ROW LEVEL SECURITY;
+ALTER TABLE workspace_members ENABLE ROW LEVEL SECURITY;
+ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE artifacts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE artifact_tags ENABLE ROW LEVEL SECURITY;
 ALTER TABLE gate_decisions ENABLE ROW LEVEL SECURITY;
@@ -464,34 +464,34 @@ ALTER TABLE audit_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE cost_tracking ENABLE ROW LEVEL SECURITY;
 
 -- ============================================================================
--- Organizations: Admins can manage, members can view their own
+-- Workspaces: Admins can manage, members can view their own
 -- ============================================================================
 
-CREATE POLICY org_view ON organizations
+CREATE POLICY workspace_view ON workspaces
   FOR SELECT
   USING (
-    -- User is member of this org
+    -- User is member of this workspace
     EXISTS (
-      SELECT 1 FROM org_members om
-      WHERE om.org_id = organizations.id
+      SELECT 1 FROM workspace_members om
+      WHERE om.workspace_id = workspaces.id
       AND om.user_id = current_user_id()
     )
   );
 
-CREATE POLICY org_update ON organizations
+CREATE POLICY workspace_update ON workspaces
   FOR UPDATE
   USING (
-    -- User is OWNER or ADMIN of this org
+    -- User is OWNER or ADMIN of this workspace
     EXISTS (
-      SELECT 1 FROM org_members om
-      WHERE om.org_id = organizations.id
+      SELECT 1 FROM workspace_members om
+      WHERE om.workspace_id = workspaces.id
       AND om.user_id = current_user_id()
       AND om.role IN ('OWNER', 'ADMIN')
     )
   );
 
 -- ============================================================================
--- Ventures: Only users in same org can access
+-- Projects: Only users in same workspace can access
 -- ============================================================================
 
 CREATE POLICY venture_select ON ventures
@@ -543,8 +543,8 @@ CREATE POLICY artifact_select ON artifacts
   FOR SELECT
   USING (
     -- Artifact's venture's org_id matches user's memberships
-    venture_id IN (
-      SELECT id FROM ventures
+    project_id IN (
+      SELECT id from projects
       WHERE org_id IN (
         SELECT org_id FROM org_members
         WHERE user_id = current_user_id()
@@ -556,8 +556,8 @@ CREATE POLICY artifact_insert ON artifacts
   FOR INSERT
   WITH CHECK (
     -- Can only add to venture in user's org
-    venture_id IN (
-      SELECT id FROM ventures
+    project_id IN (
+      SELECT id from projects
       WHERE org_id IN (
         SELECT org_id FROM org_members
         WHERE user_id = current_user_id()
@@ -573,8 +573,8 @@ CREATE POLICY gate_decision_select ON gate_decisions
   FOR SELECT
   USING (
     -- User is in venture's org
-    venture_id IN (
-      SELECT id FROM ventures
+    project_id IN (
+      SELECT id from projects
       WHERE org_id IN (
         SELECT org_id FROM org_members
         WHERE user_id = current_user_id()
@@ -586,8 +586,8 @@ CREATE POLICY gate_decision_insert ON gate_decisions
   FOR INSERT
   WITH CHECK (
     -- Can only create for venture in user's org with ADMIN+ role
-    venture_id IN (
-      SELECT id FROM ventures
+    project_id IN (
+      SELECT id from projects
       WHERE org_id IN (
         SELECT org_id FROM org_members
         WHERE user_id = current_user_id()
@@ -603,8 +603,8 @@ CREATE POLICY gate_decision_insert ON gate_decisions
 CREATE POLICY telemetry_select ON telemetry
   FOR SELECT
   USING (
-    venture_id IN (
-      SELECT id FROM ventures
+    project_id IN (
+      SELECT id from projects
       WHERE org_id IN (
         SELECT org_id FROM org_members
         WHERE user_id = current_user_id()
@@ -708,35 +708,35 @@ export class OrgContextMiddleware implements NestMiddleware {
 
 ### Foreign Key Relationships
 
-| From             | To           | Constraint      | Behavior           |
-| ---------------- | ------------ | --------------- | ------------------ |
-| Venture          | Organization | org_id → id     | CASCADE on delete  |
-| Artifact         | Venture      | venture_id → id | CASCADE on delete  |
-| GateDecision     | Venture      | venture_id → id | CASCADE on delete  |
-| GateDecision     | User         | decided_by → id | SET NULL on delete |
-| Telemetry        | Venture      | venture_id → id | CASCADE on delete  |
-| DivergenceReport | Venture      | venture_id → id | CASCADE on delete  |
-| AuditLog         | Organization | org_id → id     | CASCADE on delete  |
-| AuditLog         | User         | actor_id → id   | SET NULL on delete |
-| CostTracking     | Organization | org_id → id     | CASCADE on delete  |
-| CostTracking     | Venture      | venture_id → id | SET NULL on delete |
+| From             | To        | Constraint        | Behavior           |
+| ---------------- | --------- | ----------------- | ------------------ |
+| Project          | Workspace | workspace_id → id | CASCADE on delete  |
+| Artifact         | Project   | project_id → id   | CASCADE on delete  |
+| GateDecision     | Project   | project_id → id   | CASCADE on delete  |
+| GateDecision     | User      | decided_by → id   | SET NULL on delete |
+| Telemetry        | Project   | project_id → id   | CASCADE on delete  |
+| DivergenceReport | Project   | project_id → id   | CASCADE on delete  |
+| AuditLog         | Workspace | workspace_id → id | CASCADE on delete  |
+| AuditLog         | User      | actor_id → id     | SET NULL on delete |
+| CostTracking     | Workspace | workspace_id → id | CASCADE on delete  |
+| CostTracking     | Project   | project_id → id   | SET NULL on delete |
 
 ### Unique Constraints
 
-| Table        | Unique Fields               | Purpose                                   |
-| ------------ | --------------------------- | ----------------------------------------- |
-| User         | email                       | No duplicate accounts                     |
-| OrgMember    | (org_id, user_id)           | One membership per user per org           |
-| Artifact     | (venture_id, type, version) | One artifact per type+version per venture |
-| ArtifactTag  | (artifact_id, tag)          | One tag per artifact per tag name         |
-| GateDecision | (venture_id, gate_type)     | One decision per gate per venture         |
+| Table           | Unique Fields               | Purpose                                   |
+| --------------- | --------------------------- | ----------------------------------------- |
+| User            | email                       | No duplicate accounts                     |
+| WorkspaceMember | (workspace_id, user_id)     | One membership per user per workspace     |
+| Artifact        | (project_id, type, version) | One artifact per type+version per project |
+| ArtifactTag     | (artifact_id, tag)          | One tag per artifact per tag name         |
+| GateDecision    | (venture_id, gate_type)     | One decision per gate per venture         |
 
 ### Indexes for Performance
 
 ```sql
 -- Frequently queried combinations
-CREATE INDEX idx_ventures_org_phase ON ventures(org_id, phase);
-CREATE INDEX idx_ventures_org_status ON ventures(org_id, status);
+CREATE INDEX idx_ventures_org_phase ON projects(org_id, phase);
+CREATE INDEX idx_ventures_org_status ON projects(org_id, status);
 CREATE INDEX idx_artifacts_venture_type ON artifacts(venture_id, type);
 CREATE INDEX idx_artifacts_venture_version ON artifacts(venture_id, version DESC);
 CREATE INDEX idx_telemetry_venture_metric ON telemetry(venture_id, metric_name);
@@ -797,23 +797,23 @@ class GateDecisionValidation {
 ### Initial Seeding (Test Data)
 
 ```sql
--- Create test org
-INSERT INTO organizations (id, name, subscription_tier)
-VALUES ('org_test_1', 'Acme Corp', 'PRO');
+-- Create test workspace
+INSERT INTO workspaces (id, name, subscription_tier)
+VALUES ('workspace_test_1', 'Acme Corp', 'PRO');
 
 -- Create test user
 INSERT INTO users (id, email, display_name, auth_provider)
 VALUES ('user_test_1', 'founder@acme.com', 'Alice Founder', 'supabase');
 
--- Add user to org
-INSERT INTO org_members (org_id, user_id, role)
-VALUES ('org_test_1', 'user_test_1', 'OWNER');
+-- Add user to workspace
+INSERT INTO workspace_members (workspace_id, user_id, role)
+VALUES ('workspace_test_1', 'user_test_1', 'OWNER');
 
--- Create test venture
-INSERT INTO ventures (id, org_id, name, description, phase)
+-- Create test project
+INSERT INTO projects (id, workspace_id, name, description, phase)
 VALUES (
-  'venture_test_1',
-  'org_test_1',
+  'project_test_1',
+  'workspace_test_1',
   'AI Time Tracking',
   'AI-powered time tracking for remote teams',
   'DISCOVER'
